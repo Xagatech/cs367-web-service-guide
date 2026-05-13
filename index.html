@@ -424,6 +424,13 @@ mark{background:rgba(251,191,36,.25);color:var(--text);border-radius:2px;padding
     <a class="nav-item" href="#l8" style="--lesson-color:var(--c8)">
       <span class="nav-badge" style="background:var(--c8)">L8</span>gRPC
     </a>
+    <div style="height:1px;background:var(--border);margin:8px 14px"></div>
+    <a class="nav-item" href="#lab-deploy" style="--lesson-color:#e879f9">
+      <span class="nav-badge" style="background:#e879f9">LA</span>Lab: Deployment
+    </a>
+    <a class="nav-item" href="#lab-grpc" style="--lesson-color:#f472b6">
+      <span class="nav-badge" style="background:#f472b6">LB</span>Lab: gRPC Student
+    </a>
   </nav>
 </aside>
 
@@ -1361,6 +1368,646 @@ message ListRequest {
               <tr><td>Use case</td><td>Internal microservices</td><td>Public API, browsers</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </details>
+  </section>
+
+
+  <!-- ═══════════════════ LAB A: DEPLOYMENT ═══════════════════ -->
+  <section class="lesson" id="lab-deploy" style="--lesson-color:#e879f9">
+    <div class="lesson-header">
+      <div class="lesson-num" style="color:#000">LA</div>
+      <div><div class="lesson-title">Lab: Production-Ready Deployment</div></div>
+      <span class="lesson-tag">แบบฝึกหัด</span>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Stack ที่ใช้</div>
+        <ul>
+          <li><strong style="color:#e879f9">Go + Gin</strong> — REST API</li>
+          <li><strong style="color:#e879f9">PostgreSQL</strong> — Database</li>
+          <li><strong style="color:#e879f9">Docker</strong> — Containerize</li>
+          <li><strong style="color:#e879f9">Kubernetes (Minikube)</strong> — Orchestrate</li>
+          <li><strong style="color:#e879f9">GitHub Actions</strong> — CI/CD</li>
+          <li><strong style="color:#e879f9">Prometheus + Grafana</strong> — Monitoring</li>
+          <li><strong style="color:#e879f9">k6 + Hurl</strong> — Load &amp; functional testing</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Project Structure</div>
+        <div class="code-wrap" style="margin-top:8px">
+          <pre><code class="language-plaintext">deployment/
+├── api/
+│   ├── main.go          # Go API source
+│   └── Dockerfile       # Multi-stage build
+├── docker/
+│   ├── init.sql         # PostgreSQL init
+│   └── prometheus.yml   # Scrape config
+├── k8s/
+│   ├── postgres-db.yaml
+│   ├── api-deployment.yaml
+│   ├── prometheus.yaml
+│   └── grafana.yaml
+├── tests/
+│   ├── hurl/            # Functional tests
+│   └── k6/script.js     # Load test
+└── docker-compose.yml   # Local dev stack</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <details open>
+      <summary>api/main.go — อธิบายทุกส่วน</summary>
+      <div class="details-body">
+        <div class="cards" style="margin-top:8px">
+          <div class="card">
+            <div class="card-title">1. Prometheus Metrics</div>
+            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">นับ request และวัด latency ทุก endpoint</p>
+            <div class="code-wrap">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code class="language-go">// Counter — นับจำนวน requests แยกตาม method/path/status
+var httpRequestsTotal = prometheus.NewCounterVec(
+    prometheus.CounterOpts{
+        Name: "http_requests_total",
+    },
+    []string{"method", "path", "status"},
+)
+
+// Histogram — วัด latency (distribution)
+var httpRequestDuration = prometheus.NewHistogramVec(
+    prometheus.HistogramOpts{
+        Name:    "http_request_duration_seconds",
+        Buckets: prometheus.DefBuckets,
+    },
+    []string{"method", "path"},
+)</code></pre>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">2. Prometheus Middleware</div>
+            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">รัน before/after ทุก handler — บันทึก metric อัตโนมัติ</p>
+            <div class="code-wrap">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code class="language-go">func prometheusMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+        start := time.Now()
+        c.Next()  // เรียก handler จริง
+        duration := time.Since(start).Seconds()
+        status := fmt.Sprintf("%d", c.Writer.Status())
+
+        // บันทึก metrics
+        httpRequestsTotal.WithLabelValues(
+            c.Request.Method, c.FullPath(), status,
+        ).Inc()
+        httpRequestDuration.WithLabelValues(
+            c.Request.Method, c.FullPath(),
+        ).Observe(duration)
+    }
+}</code></pre>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">3. Health Probes</div>
+            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">Kubernetes ใช้ probe เหล่านี้ตัดสินใจ traffic</p>
+            <div class="code-wrap">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code class="language-go">// Liveness: container ยังมีชีวิตอยู่ไหม?
+// ถ้า fail → K8s restart container
+func healthLive(c *gin.Context) {
+    jsonResponse(c, http.StatusOK, gin.H{"status": "alive"})
+}
+
+// Readiness: พร้อมรับ traffic ไหม?
+// ถ้า fail → K8s หยุดส่ง traffic มาก่อน
+func healthReady(c *gin.Context) {
+    if db != nil {
+        if err := db.Ping(); err != nil {
+            jsonResponse(c, http.StatusServiceUnavailable,
+                gin.H{"status": "not ready", "error": "database unreachable"})
+            return
+        }
+    }
+    jsonResponse(c, http.StatusOK, gin.H{"status": "ready"})
+}</code></pre>
+            </div>
+            <div class="tbl-wrap" style="margin-top:10px">
+              <table>
+                <thead><tr><th>Endpoint</th><th>Purpose</th><th>Fail → K8s action</th></tr></thead>
+                <tbody>
+                  <tr><td><code>/livez</code></td><td>Liveness probe</td><td>Restart container</td></tr>
+                  <tr><td><code>/readyz</code></td><td>Readiness probe</td><td>Remove from load balancer</td></tr>
+                  <tr><td><code>/metrics</code></td><td>Prometheus scrape</td><td>—</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">4. Graceful Shutdown</div>
+            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">รับ SIGTERM จาก K8s → drain connections ก่อน exit</p>
+            <div class="code-wrap">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code class="language-go">// Start server in background goroutine
+go func() {
+    if err := srv.ListenAndServe(); err != nil {
+        log.Fatalf("Server error: %v", err)
+    }
+}()
+
+// Block รอ signal SIGTERM หรือ SIGINT
+quit := make(chan os.Signal, 1)
+signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+&lt;-quit  // หยุดตรงนี้จนกว่าจะได้รับ signal
+
+// Graceful shutdown — รอ max 15 วินาที
+ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+defer cancel()
+srv.Shutdown(ctx)  // รอ in-flight requests เสร็จก่อน</code></pre>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">5. Database Connection Pool</div>
+            <div class="code-wrap">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code class="language-go">db, err = sql.Open("postgres", dsn)
+
+// Connection pool settings
+db.SetMaxOpenConns(25)          // max connections พร้อมกัน
+db.SetMaxIdleConns(5)           // idle connections ที่เก็บไว้
+db.SetConnMaxLifetime(5 * time.Minute)  // recycle connections
+
+// Environment variables — ไม่ hardcode credentials
+host := getEnv("DB_HOST", "localhost")
+port := getEnv("DB_PORT", "5432")
+user := getEnv("DB_USER", "postgres")
+password := getEnv("DB_PASSWORD", "password")</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Dockerfile — Multi-stage Build</summary>
+      <div class="details-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-dockerfile"># Stage 1: Build (ใช้ Go image ขนาดใหญ่)
+FROM golang:1.22-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download              # cache deps layer
+COPY . .
+RUN go build -o api .            # compile binary
+
+# Stage 2: Run (ใช้ scratch — ไม่มี OS ไม่มีอะไรเลย)
+FROM scratch
+COPY --from=builder /app/api /api
+EXPOSE 8080
+CMD ["/api"]
+
+# ผล: image ขนาดเล็กมาก (~10MB) vs single-stage (~300MB+)</code></pre>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div class="card-title">ทำไม Multi-stage?</div>
+          <ul>
+            <li>Stage 1: มี Go compiler, tools ทั้งหมด → ไม่ต้องใส่ใน final image</li>
+            <li>Stage 2: copy แค่ binary เดียว → image เล็ก, attack surface น้อย</li>
+            <li><code>scratch</code> = empty image ไม่มี shell, ไม่มี OS utilities</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>4 Phases ของ Lab</summary>
+      <div class="details-body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Phase</th><th>ทำอะไร</th><th>เวลา</th></tr></thead>
+            <tbody>
+              <tr><td><strong style="color:#e879f9">1</strong></td><td>Setup environment — Minikube, fork repo, kubectl get nodes</td><td>15-20 นาที</td></tr>
+              <tr><td><strong style="color:#e879f9">2</strong></td><td>Deploy PostgreSQL → K8s DNS (connect โดย Service name ไม่ใช่ IP)</td><td>20 นาที</td></tr>
+              <tr><td><strong style="color:#e879f9">3</strong></td><td>Build Docker image → push Docker Hub → deploy Go API → test endpoints</td><td>30 นาที</td></tr>
+              <tr><td><strong style="color:#e879f9">4</strong></td><td>CI/CD — GitHub Actions + self-hosted runner → push code → auto deploy</td><td>40 นาที</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div class="card-title">Key Concept: Kubernetes DNS</div>
+          <p>App connect ถึง DB โดยใช้ <code>db-service</code> (Service name) แทน IP — K8s DNS resolve Service name → ClusterIP อัตโนมัติ IP ของ Pod เปลี่ยนได้ตลอด แต่ Service name คงที่เสมอ</p>
+        </div>
+        <div class="card">
+          <div class="card-title">CI/CD Flow (Phase 4)</div>
+          <div class="flow" style="flex-wrap:wrap;gap:6px">
+            <div class="flow-box" style="font-size:.78rem">git push</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-box accent" style="font-size:.78rem">GitHub Actions trigger</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-box" style="font-size:.78rem">docker build + push</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-box" style="font-size:.78rem">kubectl rollout</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-box accent" style="font-size:.78rem">New version live!</div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Kubernetes YAML — api-deployment.yaml อธิบาย</summary>
+      <div class="details-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-api
+spec:
+  replicas: 2                     # รัน 2 instances
+  selector:
+    matchLabels:
+      app: go-api
+  template:
+    spec:
+      containers:
+      - name: go-api
+        image: DOCKER_USERNAME/go-api:latest
+        ports:
+        - containerPort: 8080
+        env:                      # Environment variables สำหรับ DB
+        - name: DB_HOST
+          value: db-service       # ← ใช้ Service name (K8s DNS)
+        livenessProbe:            # K8s จะ ping endpoint นี้
+          httpGet:
+            path: /livez
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler   # Auto scale
+metadata:
+  name: go-api-hpa
+spec:
+  maxReplicas: 5                  # ขยายได้สูงสุด 5 pods
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        averageUtilization: 70    # scale up ถ้า CPU &gt; 70%</code></pre>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ═══════════════════ LAB B: gRPC STUDENT ═══════════════════ -->
+  <section class="lesson" id="lab-grpc" style="--lesson-color:#f472b6">
+    <div class="lesson-header">
+      <div class="lesson-num" style="color:#000">LB</div>
+      <div><div class="lesson-title">Lab: gRPC Student Service (Go)</div></div>
+      <span class="lesson-tag">แบบฝึกหัด</span>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">สิ่งที่จะสร้าง</div>
+        <p>gRPC service สำหรับ student data ใน Go — client เรียก <code>GetStudent(id)</code> → server คืน student info ผ่าน Protobuf binary protocol บน HTTP/2</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Final Structure</div>
+        <div class="code-wrap" style="margin-top:8px">
+          <pre><code class="language-plaintext">grpc-student/
+├── proto/
+│   └── student.proto        # สัญญา API
+├── studentpb/               # auto-generated จาก proto
+│   ├── student.pb.go
+│   └── student_grpc.pb.go
+├── server/
+│   └── server.go            # implement service
+├── client/
+│   └── client.go            # เรียก service
+├── go.mod
+└── go.sum</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <details open>
+      <summary>Step 1-2 — ติดตั้งและ init project</summary>
+      <div class="details-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-bash"># ติดตั้ง protoc plugins
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+# ตรวจสอบ
+go version
+protoc --version
+
+# สร้าง project
+mkdir grpc-student &amp;&amp; cd grpc-student
+go mod init grpc-student
+mkdir proto server client</code></pre>
+        </div>
+      </div>
+    </details>
+
+    <details open>
+      <summary>Step 3 — proto/student.proto อธิบายทุกบรรทัด</summary>
+      <div class="details-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-protobuf">syntax = "proto3";              // ใช้ proto version 3
+
+package student;               // namespace ป้องกัน name collision
+
+option go_package = "./studentpb";  // บอก protoc ว่าจะ generate code ไว้ที่ไหน
+
+// Service = กำหนด RPC methods ที่ server ต้อง implement
+service StudentService {
+  rpc GetStudent (StudentRequest) returns (StudentResponse);
+
+  // assignments เพิ่มเติม:
+  rpc ListStudents (Empty) returns (StudentListResponse);
+  rpc CreateStudent (StudentListResponse) returns (Empty);
+  rpc DeleteStudent (DeleteStudentRequest) returns (Empty);
+}
+
+// Messages = structure ของ data (เหมือน struct)
+message Empty {}               // ไม่มี payload (เช่น void)
+
+message StudentRequest {
+  int32 id = 1;                // field number 1 (ใช้ใน binary encoding)
+  optional string name = 2;   // optional field
+}
+
+message StudentResponse {
+  int32 id = 1;
+  string name = 2;
+  string major = 3;
+  string email = 4;
+  // ถ้าเพิ่ม field ใหม่ → ต้องใช้ field number ใหม่ (5, 6, ...)
+  // ห้ามเปลี่ยน field number เดิม = breaking change!
+}
+
+message StudentListResponse {
+  repeated StudentResponse student = 1;  // repeated = array
+}
+
+message DeleteStudentRequest {
+  string name = 1;
+}</code></pre>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 4 — Generate Go code จาก proto</summary>
+      <div class="details-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-bash">protoc --go_out=. --go-grpc_out=. proto/student.proto</code></pre>
+        </div>
+        <div class="tbl-wrap" style="margin-top:12px">
+          <table>
+            <thead><tr><th>Flag</th><th>ทำอะไร</th><th>ไฟล์ที่ได้</th></tr></thead>
+            <tbody>
+              <tr><td><code>--go_out=.</code></td><td>Generate message structs</td><td>studentpb/student.pb.go</td></tr>
+              <tr><td><code>--go-grpc_out=.</code></td><td>Generate gRPC interfaces</td><td>studentpb/student_grpc.pb.go</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tbl-wrap" style="margin-top:8px">
+          <table>
+            <thead><tr><th>File</th><th>ประกอบด้วย</th></tr></thead>
+            <tbody>
+              <tr><td>student.pb.go</td><td>Go structs สำหรับ StudentRequest, StudentResponse (จาก messages)</td></tr>
+              <tr><td>student_grpc.pb.go</td><td>Client stub + Server interface ที่ต้อง implement</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 5 — server/server.go อธิบายทุกส่วน</summary>
+      <div class="details-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-go">package main
+
+import (
+    "context"
+    "log"
+    "net"
+
+    pb "grpc-student/studentpb"   // import generated code
+    "google.golang.org/grpc"
+)
+
+// server struct — ต้อง embed UnimplementedStudentServiceServer
+// เพื่อ forward-compatibility (ถ้า proto เพิ่ม method ใหม่ ไม่ compile error)
+type server struct {
+    pb.UnimplementedStudentServiceServer
+}
+
+// Implement GetStudent RPC method
+// signature ต้องตรงกับที่ proto กำหนด
+func (s *server) GetStudent(ctx context.Context, req *pb.StudentRequest) (*pb.StudentResponse, error) {
+    log.Printf("Received request for student ID: %d", req.Id)
+
+    // ตรงนี้ปกติจะ query DB แต่ lab ใช้ mock data
+    return &amp;pb.StudentResponse{
+        Id:    req.Id,
+        Name:  "Alice Johnson",
+        Major: "Computer Science",
+        Email: "alice@university.com",
+    }, nil
+}
+
+func main() {
+    // เปิด TCP listener บน port 50051
+    lis, err := net.Listen("tcp", ":50051")
+    if err != nil {
+        log.Fatalf("Failed to listen: %v", err)
+    }
+
+    // สร้าง gRPC server
+    grpcServer := grpc.NewServer()
+
+    // Register service implementation
+    pb.RegisterStudentServiceServer(grpcServer, &amp;server{})
+
+    log.Println("gRPC Server running on port 50051")
+    // เริ่ม serve (blocking)
+    grpcServer.Serve(lis)
+}</code></pre>
+        </div>
+        <div class="code-wrap" style="margin-top:12px">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-bash"># Run server (Terminal 1)
+go mod tidy    # update go.sum
+go run server/server.go
+# Output: gRPC Server running on port 50051</code></pre>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 6 — client/client.go อธิบายทุกส่วน</summary>
+      <div class="details-body">
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-go">package main
+
+import (
+    "context"
+    "log"
+    "time"
+
+    pb "grpc-student/studentpb"
+    "google.golang.org/grpc"
+)
+
+func main() {
+    // เชื่อมต่อ gRPC server
+    // grpc.WithInsecure() = ไม่ใช้ TLS (สำหรับ dev/lab เท่านั้น)
+    conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+    if err != nil {
+        log.Fatalf("Could not connect: %v", err)
+    }
+    defer conn.Close()
+
+    // สร้าง client stub (generated โดย protoc)
+    // stub คือ wrapper ที่ทำให้เรียก remote method เหมือน local function
+    client := pb.NewStudentServiceClient(conn)
+
+    // Context with timeout — ถ้า server ตอบไม่ทัน 1 วินาที → error
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+    defer cancel()
+
+    // เรียก RPC — เหมือนเรียก local function ธรรมดา
+    res, err := client.GetStudent(ctx, &amp;pb.StudentRequest{
+        Id: 101,
+    })
+    if err != nil {
+        log.Fatalf("Error calling GetStudent: %v", err)
+    }
+
+    log.Printf("Student Info:")
+    log.Printf("ID: %d", res.Id)
+    log.Printf("Name: %s", res.Name)
+    log.Printf("Major: %s", res.Major)
+    log.Printf("Email: %s", res.Email)
+}</code></pre>
+        </div>
+        <div class="code-wrap" style="margin-top:12px">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code class="language-bash"># Run client (Terminal 2 — server ต้องรันก่อน)
+go run client/client.go
+
+# Expected output:
+# Student Info:
+# ID: 101
+# Name: Alice Johnson
+# Major: Computer Science
+# Email: alice@university.com</code></pre>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>gRPC Flow ภาพรวม</summary>
+      <div class="details-body">
+        <div class="flow" style="flex-wrap:wrap;gap:8px;margin-bottom:14px">
+          <div class="flow-box accent" style="font-size:.8rem">client.GetStudent()</div>
+          <div class="flow-arr">→</div>
+          <div class="flow-box" style="font-size:.8rem">Client Stub</div>
+          <div class="flow-arr">→</div>
+          <div class="flow-box" style="font-size:.8rem">Protobuf serialize</div>
+          <div class="flow-arr">→</div>
+          <div class="flow-box" style="font-size:.8rem">HTTP/2</div>
+          <div class="flow-arr">→</div>
+          <div class="flow-box" style="font-size:.8rem">Server Stub</div>
+          <div class="flow-arr">→</div>
+          <div class="flow-box accent" style="font-size:.8rem">GetStudent() method</div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Step</th><th>ทำอะไร</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>เขียน <code>.proto</code> file (สัญญา API)</td></tr>
+              <tr><td>2</td><td>Run <code>protoc</code> → generate Go code</td></tr>
+              <tr><td>3</td><td>Implement server methods</td></tr>
+              <tr><td>4</td><td>Start server (<code>grpcServer.Serve()</code>)</td></tr>
+              <tr><td>5</td><td>Client connect → สร้าง stub</td></tr>
+              <tr><td>6</td><td>Client call <code>stub.GetStudent()</code></td></tr>
+              <tr><td>7</td><td>Stub serialize → HTTP/2 → Server deserialize → method → response</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Assignments — Task 1 &amp; 2</summary>
+      <div class="details-body">
+        <div class="cards" style="margin-top:8px">
+          <div class="card">
+            <div class="card-title">Task 1: Add ListStudents RPC</div>
+            <div class="code-wrap" style="margin-top:8px">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code class="language-protobuf">// เพิ่มใน service StudentService
+rpc ListStudents (Empty) returns (StudentListResponse);
+
+// เพิ่ม messages
+message Empty {}
+
+message StudentListResponse {
+  repeated StudentResponse student = 1;
+}</code></pre>
+            </div>
+            <ul style="margin-top:8px;font-size:.82rem;color:var(--dim)">
+              <li>Update proto → regenerate code (<code>protoc ...</code>)</li>
+              <li>Implement <code>ListStudents()</code> ใน server.go คืน list ของ students</li>
+              <li>Update client.go เรียก <code>ListStudents()</code></li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-title">Task 2: Add Phone Field</div>
+            <div class="code-wrap" style="margin-top:8px">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code class="language-protobuf">message StudentResponse {
+  int32 id = 1;
+  string name = 2;
+  string major = 3;
+  string email = 4;
+  string phone = 5;   // ← เพิ่ม field ใหม่ (field number ต่อจากเดิม!)
+}</code></pre>
+            </div>
+            <ul style="margin-top:8px;font-size:.82rem;color:var(--dim)">
+              <li>Regenerate code</li>
+              <li>Update server: ใส่ Phone ใน response</li>
+              <li>Update client: print phone ด้วย</li>
+              <li>ห้ามเปลี่ยน field number 1-4 = breaking change</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card" style="margin-top:4px">
+          <div class="card-title">Submission</div>
+          <ul>
+            <li>Push ขึ้น GitHub: repo name = <code>grpc-student-รหัสนักศึกษา</code></li>
+            <li>ส่ง GitHub link ที่ <code>https://courses.cs.tu.ac.th</code></li>
+            <li>Deadline: Monday 30, 23:59</li>
+          </ul>
         </div>
       </div>
     </details>
