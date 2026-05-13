@@ -3,744 +3,560 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CS367 — Web Service Development Concepts</title>
+<title>CS367 — Web Service Development</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Raleway:wght@800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/base16/tomorrow-night.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/yaml.min.js"></script>
 <style>
-:root {
-  --bg: #060a14;
-  --bg2: #0c1220;
-  --bg3: #111827;
-  --bg4: #1e2d40;
-  --border: rgba(34,211,238,0.1);
-  --border2: rgba(34,211,238,0.25);
-  --text: #e2e8f0;
-  --muted: #64748b;
-  --dim: #94a3b8;
-  --c1: #22d3ee;
-  --c2: #a78bfa;
-  --c3: #34d399;
-  --c4: #fb923c;
-  --c5: #f87171;
-  --c6: #60a5fa;
-  --c7: #4ade80;
-  --c8: #fbbf24;
-  --sidebar: 268px;
+:root{
+  --bg:#070d1a;--bg2:#0d1525;--bg3:#111e30;--bg4:#1a2840;
+  --border:rgba(56,189,248,.1);--border2:rgba(56,189,248,.25);
+  --text:#e2eaf4;--dim:#94a3b8;--muted:#4a5568;
+  --c1:#38bdf8;--c2:#a78bfa;--c3:#34d399;--c4:#fb923c;
+  --c5:#f87171;--c6:#60a5fa;--c7:#4ade80;--c8:#fbbf24;
+  --la:#e879f9;--lb:#f472b6;
+  --sidebar:275px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Outfit',sans-serif;
-  font-weight:400;
-  line-height:1.7;
-  display:flex;
-  min-height:100vh;
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(34,211,238,0.05) 1px, transparent 0);
-  background-size:28px 28px;
-}
-
-/* PROGRESS BAR */
-#progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--c1),var(--c2));width:0%;z-index:1000;transition:width .1s}
-
+body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;font-weight:400;line-height:1.8;display:flex;min-height:100vh;background-image:radial-gradient(circle at 1px 1px,rgba(56,189,248,.04) 1px,transparent 0);background-size:32px 32px;}
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3));width:0%;z-index:1000;transition:width .1s}
 /* SIDEBAR */
-#sidebar{
-  width:var(--sidebar);
-  min-width:var(--sidebar);
-  background:var(--bg2);
-  border-right:1px solid var(--border);
-  height:100vh;
-  position:fixed;
-  top:0;left:0;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  z-index:100;
-}
-.sidebar-head{
-  padding:24px 20px 16px;
-  border-bottom:1px solid var(--border);
-}
-.sidebar-head .course{
-  font-family:'Raleway',sans-serif;
-  font-weight:900;
-  font-size:1.25rem;
-  color:var(--c1);
-  letter-spacing:-0.5px;
-}
-.sidebar-head .subtitle{
-  font-size:.72rem;
-  color:var(--muted);
-  margin-top:2px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-}
-#search{
-  margin:12px 14px;
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:8px 12px 8px 36px;
-  color:var(--text);
-  font-family:'Outfit',sans-serif;
-  font-size:.85rem;
-  width:calc(100% - 28px);
-  outline:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:10px center;
-  transition:border-color .2s;
-}
+#sidebar{width:var(--sidebar);min-width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;overflow:hidden;z-index:100;}
+.sb-head{padding:20px 18px 14px;border-bottom:1px solid var(--border);}
+.sb-head .logo{font-family:'Raleway',sans-serif;font-weight:900;font-size:1.3rem;color:var(--c1);letter-spacing:-0.5px;}
+.sb-head .sub{font-size:.7rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.1em;}
+#search{margin:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px 8px 34px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:.83rem;width:calc(100% - 24px);outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:10px center;transition:border-color .2s;}
 #search:focus{border-color:var(--c1);}
 #search::placeholder{color:var(--muted);}
-nav{overflow-y:auto;flex:1;padding:8px 0 20px;}
+nav{overflow-y:auto;flex:1;padding:6px 0 20px;}
 nav::-webkit-scrollbar{width:3px}
-nav::-webkit-scrollbar-track{background:transparent}
 nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.nav-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:9px 20px;
-  cursor:pointer;
-  text-decoration:none;
-  color:var(--dim);
-  font-size:.84rem;
-  font-weight:500;
-  transition:all .18s;
-  border-left:3px solid transparent;
-  position:relative;
-}
-.nav-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
-.nav-item.active{color:var(--text);border-left-color:var(--lesson-color,var(--c1));background:rgba(34,211,238,.06)}
-.nav-badge{
-  width:22px;height:22px;
-  border-radius:6px;
-  background:var(--lesson-color,var(--c1));
-  color:#000;
-  font-size:.68rem;
-  font-weight:800;
-  font-family:'Raleway',sans-serif;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-}
-
+.ni{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;text-decoration:none;color:var(--dim);font-size:.82rem;font-weight:500;transition:all .15s;border-left:3px solid transparent;}
+.ni:hover{color:var(--text);background:rgba(255,255,255,.025)}
+.ni.active{color:var(--text);border-left-color:var(--lc,var(--c1));background:rgba(56,189,248,.05)}
+.nb{width:20px;height:20px;border-radius:5px;background:var(--lc,var(--c1));color:#000;font-size:.65rem;font-weight:800;font-family:'Raleway',sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ndiv{height:1px;background:var(--border);margin:6px 12px;}
 /* MAIN */
-main{
-  margin-left:var(--sidebar);
-  flex:1;
-  padding:48px 40px 80px;
-  max-width:calc(100vw - var(--sidebar));
-}
-.page-title{
-  font-family:'Raleway',sans-serif;
-  font-weight:900;
-  font-size:2.2rem;
-  background:linear-gradient(135deg,var(--c1),var(--c2));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  margin-bottom:6px;
-}
-.page-sub{color:var(--muted);font-size:.9rem;margin-bottom:48px;}
-
-/* LESSON SECTION */
-.lesson{
-  margin-bottom:64px;
-  opacity:1;
-  transition:opacity .3s;
-}
-.lesson.hidden{opacity:.15;pointer-events:none}
-.lesson-header{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-bottom:24px;
-  padding-bottom:16px;
-  border-bottom:1px solid var(--border);
-}
-.lesson-num{
-  width:44px;height:44px;
-  border-radius:12px;
-  background:var(--lesson-color);
-  color:#000;
-  font-family:'Raleway',sans-serif;
-  font-weight:900;
-  font-size:1rem;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-  box-shadow:0 0 20px color-mix(in srgb, var(--lesson-color) 30%, transparent);
-}
-.lesson-title{
-  font-family:'Raleway',sans-serif;
-  font-weight:800;
-  font-size:1.45rem;
-  color:var(--text);
-}
-.lesson-tag{
-  font-size:.72rem;
-  padding:3px 10px;
-  border-radius:20px;
-  border:1px solid var(--lesson-color);
-  color:var(--lesson-color);
-  font-weight:600;
-  margin-left:auto;
-  white-space:nowrap;
-}
-
-/* CARD */
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px;}
-.card{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:20px;
-  transition:border-color .2s, box-shadow .2s;
-}
-.card:hover{
-  border-color:var(--border2);
-  box-shadow:0 0 20px rgba(34,211,238,.05);
-}
-.card-title{
-  font-weight:600;
-  font-size:.9rem;
-  color:var(--lesson-color,var(--c1));
-  margin-bottom:10px;
-  display:flex;align-items:center;gap:6px;
-}
-.card-title::before{content:'▸';font-size:.75rem;}
-.card p,.card li{font-size:.88rem;color:var(--dim);line-height:1.65}
+main{margin-left:var(--sidebar);flex:1;padding:48px 44px 100px;max-width:calc(100vw - var(--sidebar));}
+.page-hero{margin-bottom:52px;}
+.page-hero h1{font-family:'Raleway',sans-serif;font-weight:900;font-size:2.4rem;background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;}
+.page-hero p{color:var(--dim);margin-top:8px;font-size:.95rem;}
+/* LESSON */
+.lesson{margin-bottom:72px;}
+.lesson.hidden{opacity:.12;pointer-events:none}
+.lhead{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:18px;border-bottom:2px solid var(--border);}
+.lnum{width:46px;height:46px;border-radius:12px;background:var(--lc);color:#000;font-family:'Raleway',sans-serif;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px color-mix(in srgb,var(--lc) 35%,transparent);}
+.ltitle{font-family:'Raleway',sans-serif;font-weight:800;font-size:1.5rem;}
+.ltag{font-size:.7rem;padding:3px 10px;border-radius:20px;border:1px solid var(--lc);color:var(--lc);font-weight:700;margin-left:auto;white-space:nowrap;}
+/* CONTENT BLOCKS */
+.teach-block{margin-bottom:28px;}
+.teach-block h3{font-size:1.1rem;font-weight:700;color:var(--lc,var(--c1));margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.teach-block h3::before{content:'';width:4px;height:18px;background:var(--lc,var(--c1));border-radius:2px;display:inline-block;}
+.teach-block p,.teach-block li{font-size:.92rem;color:var(--dim);line-height:1.85;}
+.teach-block ul,.teach-block ol{padding-left:20px;margin-top:6px;}
+.teach-block li{margin-bottom:5px;}
+.teach-block strong{color:var(--text);}
+/* ANALOGY BOX */
+.analogy{background:linear-gradient(135deg,rgba(56,189,248,.07),rgba(167,139,250,.07));border:1px solid rgba(56,189,248,.2);border-left:4px solid var(--c1);border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.9rem;color:var(--dim);}
+.analogy strong{color:var(--c1);}
+/* WHY BOX */
+.why{background:rgba(251,146,60,.06);border:1px solid rgba(251,146,60,.2);border-left:4px solid var(--c4);border-radius:0 12px 12px 0;padding:14px 18px;margin:12px 0;font-size:.88rem;color:var(--dim);}
+.why strong{color:var(--c4);}
+/* WARN BOX */
+.warn{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);border-left:4px solid var(--c5);border-radius:0 12px 12px 0;padding:14px 18px;margin:12px 0;font-size:.88rem;color:var(--dim);}
+.warn strong{color:var(--c5);}
+/* TIP BOX */
+.tip{background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);border-left:4px solid var(--c3);border-radius:0 12px 12px 0;padding:14px 18px;margin:12px 0;font-size:.88rem;color:var(--dim);}
+.tip strong{color:var(--c3);}
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:14px 0;}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color .2s;}
+.card:hover{border-color:var(--border2);}
+.card h4{font-size:.88rem;font-weight:700;color:var(--lc,var(--c1));margin-bottom:8px;}
+.card p,.card li{font-size:.85rem;color:var(--dim);line-height:1.7;}
 .card ul{padding-left:16px;margin-top:4px;}
-.card ul li{margin-bottom:4px;}
-.full-width{grid-column:1/-1}
-
-/* DETAILS (collapsible) */
-details{
-  background:var(--bg3);
-  border:1px solid var(--border);
-  border-radius:14px;
-  margin-bottom:14px;
-  overflow:hidden;
-}
-details[open]{border-color:var(--border2)}
-summary{
-  padding:16px 20px;
-  cursor:pointer;
-  font-weight:600;
-  font-size:.9rem;
-  color:var(--text);
-  list-style:none;
-  display:flex;align-items:center;gap:10px;
-  user-select:none;
-  transition:background .15s;
-}
-summary:hover{background:rgba(255,255,255,.03)}
-summary::after{content:'﹢';margin-left:auto;color:var(--muted);font-size:1.1rem;transition:transform .2s}
+.fw{grid-column:1/-1;}
+/* DETAILS */
+details{background:var(--bg3);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+details[open]{border-color:var(--border2);}
+summary{padding:14px 18px;cursor:pointer;font-weight:600;font-size:.92rem;color:var(--text);list-style:none;display:flex;align-items:center;gap:8px;user-select:none;}
+summary:hover{background:rgba(255,255,255,.025)}
+summary::after{content:'﹢';margin-left:auto;color:var(--muted);font-size:1.1rem;}
 details[open] summary::after{content:'－'}
-.details-body{padding:0 20px 20px;}
-
+.db{padding:4px 18px 18px;}
 /* TABLE */
-.tbl-wrap{overflow-x:auto;margin:4px 0;}
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:.84rem;
-}
-th{
-  background:var(--bg4);
-  color:var(--lesson-color,var(--c1));
-  font-weight:700;
-  padding:10px 14px;
-  text-align:left;
-  font-size:.8rem;
-  text-transform:uppercase;
-  letter-spacing:.04em;
-}
-td{
-  padding:9px 14px;
-  border-bottom:1px solid var(--border);
-  color:var(--dim);
-  vertical-align:top;
-}
+.tw{overflow-x:auto;margin:10px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--bg4);color:var(--lc,var(--c1));font-weight:700;padding:10px 14px;text-align:left;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;}
+td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--dim);vertical-align:top;}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:rgba(255,255,255,.02);color:var(--text)}
-
-/* CODE BLOCK */
-.code-wrap{position:relative;margin:8px 0;}
-.code-wrap pre{
-  border-radius:10px;
-  font-size:.8rem;
-  font-family:'JetBrains Mono',monospace;
-  overflow-x:auto;
-  border:1px solid var(--border);
-  padding:16px !important;
-  line-height:1.65;
-}
-.copy-btn{
-  position:absolute;
-  top:8px;right:8px;
-  background:var(--bg4);
-  border:1px solid var(--border2);
-  border-radius:6px;
-  color:var(--dim);
-  font-size:.72rem;
-  padding:4px 10px;
-  cursor:pointer;
-  font-family:'Outfit',sans-serif;
-  opacity:0;
-  transition:opacity .2s,background .2s;
-}
-.code-wrap:hover .copy-btn{opacity:1}
-.copy-btn:hover{background:var(--c1);color:#000;border-color:var(--c1)}
-.copy-btn.copied{background:var(--c3);color:#000;border-color:var(--c3)}
-
-/* BADGES */
-.badge{
-  display:inline-block;
-  padding:2px 8px;
-  border-radius:6px;
-  font-size:.75rem;
-  font-weight:700;
-  font-family:'JetBrains Mono',monospace;
-  margin:2px 2px 2px 0;
-}
-.b2xx{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
-.b3xx{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)}
-.b4xx{background:rgba(251,146,60,.15);color:#fb923c;border:1px solid rgba(251,146,60,.3)}
-.b5xx{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)}
-
-/* FLOW DIAGRAM */
-.flow{
-  display:flex;align-items:center;
-  flex-wrap:wrap;gap:4px;
-  padding:16px;
-  background:var(--bg);
-  border-radius:10px;
-  border:1px solid var(--border);
-  font-size:.82rem;
-  margin:8px 0;
-}
-.flow-box{
-  padding:6px 14px;
-  border-radius:8px;
-  background:var(--bg4);
-  border:1px solid var(--border2);
-  color:var(--text);
-  font-weight:500;
-  white-space:nowrap;
-}
-.flow-arr{color:var(--muted);font-size:1rem;padding:0 2px}
-.flow-box.accent{background:color-mix(in srgb,var(--lesson-color,var(--c1)) 15%,transparent);border-color:var(--lesson-color,var(--c1));color:var(--lesson-color,var(--c1))}
-
-/* CIRCUIT BREAKER STATES */
-.states{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0}
-.state-box{
-  flex:1;min-width:140px;
-  padding:14px 16px;
-  border-radius:12px;
-  background:var(--bg);
-  border:2px solid;
-}
-.state-closed{border-color:#34d399;color:#34d399}
-.state-open{border-color:#f87171;color:#f87171}
-.state-half{border-color:#fbbf24;color:#fbbf24}
-.state-label{font-weight:700;font-size:.85rem;margin-bottom:6px}
-.state-desc{font-size:.78rem;color:var(--dim);line-height:1.5}
-
-/* HIGHLIGHT in search */
-mark{background:rgba(251,191,36,.25);color:var(--text);border-radius:2px;padding:0 2px}
-
+/* CODE */
+.cw{position:relative;margin:10px 0;}
+.cw pre{border-radius:10px;font-size:.79rem;font-family:'JetBrains Mono',monospace;overflow-x:auto;border:1px solid var(--border);padding:16px!important;line-height:1.65;}
+.cp{position:absolute;top:8px;right:8px;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--dim);font-size:.7rem;padding:3px 9px;cursor:pointer;font-family:'Sarabun',sans-serif;opacity:0;transition:opacity .2s;}
+.cw:hover .cp{opacity:1}
+.cp:hover{background:var(--c1);color:#000;border-color:var(--c1)}
+.cp.ok{background:var(--c3);color:#000;border-color:var(--c3)}
+/* BADGE */
+.b{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.74rem;font-weight:700;font-family:'JetBrains Mono',monospace;margin:2px 2px 2px 0;}
+.b2{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
+.b3{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)}
+.b4{background:rgba(251,146,60,.15);color:#fb923c;border:1px solid rgba(251,146,60,.3)}
+.b5{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)}
+/* FLOW */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:14px 16px;background:var(--bg);border-radius:10px;border:1px solid var(--border);font-size:.82rem;margin:10px 0;}
+.fb{padding:6px 14px;border-radius:7px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);font-weight:500;white-space:nowrap;}
+.fa{color:var(--muted);padding:0 2px;}
+.fb.a{background:color-mix(in srgb,var(--lc,var(--c1)) 15%,transparent);border-color:var(--lc,var(--c1));color:var(--lc,var(--c1));}
+/* STATES */
+.states{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0;}
+.sbox{flex:1;min-width:150px;padding:14px 16px;border-radius:12px;background:var(--bg);}
+.sc{border:2px solid #34d399;color:#34d399}
+.so{border:2px solid #f87171;color:#f87171}
+.sh{border:2px solid #fbbf24;color:#fbbf24}
+.sl{font-weight:700;font-size:.85rem;margin-bottom:6px;}
+.sd{font-size:.8rem;color:var(--dim);line-height:1.55;}
+/* STEP */
+.steps{counter-reset:step;display:flex;flex-direction:column;gap:10px;margin:12px 0;}
+.step{display:flex;gap:14px;align-items:flex-start;}
+.step::before{counter-increment:step;content:counter(step);width:26px;height:26px;border-radius:50%;background:var(--lc,var(--c1));color:#000;font-weight:800;font-size:.78rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step p{font-size:.88rem;color:var(--dim);line-height:1.75;}
+/* EXAM TIP */
+.exam{background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(251,146,60,.05));border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:14px 18px;margin:12px 0;}
+.exam .et{font-size:.72rem;font-weight:800;color:#fbbf24;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
+.exam p,.exam li{font-size:.87rem;color:var(--dim);line-height:1.75;}
+.exam ul{padding-left:18px;}
 /* MOBILE */
-#hamburger{
-  display:none;
-  position:fixed;top:14px;left:14px;
-  z-index:200;
-  background:var(--bg2);
-  border:1px solid var(--border2);
-  border-radius:8px;
-  width:36px;height:36px;
-  cursor:pointer;
-  align-items:center;justify-content:center;
-  flex-direction:column;gap:4px;
-}
-#hamburger span{width:18px;height:2px;background:var(--c1);border-radius:2px;display:block}
-#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99}
-
-@media(max-width:768px){
-  #hamburger{display:flex}
-  #sidebar{transform:translateX(-100%);transition:transform .25s}
-  #sidebar.open{transform:translateX(0)}
-  #overlay.show{display:block}
-  main{margin-left:0;padding:24px 16px 60px;max-width:100vw}
-  .page-title{font-size:1.6rem}
-  .cards{grid-template-columns:1fr}
-}
+#ham{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;width:36px;height:36px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px;}
+#ham span{width:18px;height:2px;background:var(--c1);border-radius:2px;display:block;}
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99}
+@media(max-width:768px){#ham{display:flex}#sidebar{transform:translateX(-100%);transition:transform .25s}#sidebar.open{transform:translateX(0)}#ov.show{display:block}main{margin-left:0;padding:24px 16px 80px;max-width:100vw}.page-hero h1{font-size:1.7rem}.cards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div id="progress"></div>
-
-<!-- Hamburger -->
-<button id="hamburger" aria-label="Menu" onclick="toggleSidebar()">
-  <span></span><span></span><span></span>
-</button>
-<div id="overlay" onclick="toggleSidebar()"></div>
-
-<!-- SIDEBAR -->
+<button id="ham" onclick="toggleSB()"><span></span><span></span><span></span></button>
+<div id="ov" onclick="toggleSB()"></div>
 <aside id="sidebar">
-  <div class="sidebar-head">
-    <div class="course">CS367</div>
-    <div class="subtitle">Web Service Development · TU</div>
+  <div class="sb-head">
+    <div class="logo">CS367</div>
+    <div class="sub">Web Service Development · TU</div>
   </div>
-  <input id="search" type="search" placeholder="ค้นหาเนื้อหา..." oninput="filterLessons(this.value)">
+  <input id="search" type="search" placeholder="ค้นหา..." oninput="filterL(this.value)">
   <nav>
-    <a class="nav-item active" href="#l1" style="--lesson-color:var(--c1)">
-      <span class="nav-badge" style="background:var(--c1)">L1</span>Web Fundamentals
-    </a>
-    <a class="nav-item" href="#l2" style="--lesson-color:var(--c2)">
-      <span class="nav-badge" style="background:var(--c2)">L2</span>REST &amp; ROA
-    </a>
-    <a class="nav-item" href="#l3" style="--lesson-color:var(--c3)">
-      <span class="nav-badge" style="background:var(--c3)">L3</span>Data Formats &amp; APIs
-    </a>
-    <a class="nav-item" href="#l4" style="--lesson-color:var(--c4)">
-      <span class="nav-badge" style="background:var(--c4)">L4</span>Security &amp; Spring Boot
-    </a>
-    <a class="nav-item" href="#l5" style="--lesson-color:var(--c5)">
-      <span class="nav-badge" style="background:var(--c5)">L5</span>Error Handling
-    </a>
-    <a class="nav-item" href="#l6" style="--lesson-color:var(--c6)">
-      <span class="nav-badge" style="background:var(--c6)">L6</span>API Gateway
-    </a>
-    <a class="nav-item" href="#l7" style="--lesson-color:var(--c7)">
-      <span class="nav-badge" style="background:var(--c7)">L7</span>Containers &amp; Docker
-    </a>
-    <a class="nav-item" href="#l8" style="--lesson-color:var(--c8)">
-      <span class="nav-badge" style="background:var(--c8)">L8</span>gRPC
-    </a>
-    <div style="height:1px;background:var(--border);margin:8px 14px"></div>
-    <a class="nav-item" href="#lab-deploy" style="--lesson-color:#e879f9">
-      <span class="nav-badge" style="background:#e879f9">LA</span>Lab: Deployment
-    </a>
-    <a class="nav-item" href="#lab-grpc" style="--lesson-color:#f472b6">
-      <span class="nav-badge" style="background:#f472b6">LB</span>Lab: gRPC Student
-    </a>
+    <a class="ni active" href="#l1" style="--lc:var(--c1)"><span class="nb" style="background:var(--c1)">L1</span>Web Fundamentals</a>
+    <a class="ni" href="#l2" style="--lc:var(--c2)"><span class="nb" style="background:var(--c2)">L2</span>REST &amp; ROA</a>
+    <a class="ni" href="#l3" style="--lc:var(--c3)"><span class="nb" style="background:var(--c3)">L3</span>Data Formats &amp; APIs</a>
+    <a class="ni" href="#l4" style="--lc:var(--c4)"><span class="nb" style="background:var(--c4)">L4</span>Security &amp; Spring Boot</a>
+    <a class="ni" href="#l5" style="--lc:var(--c5)"><span class="nb" style="background:var(--c5)">L5</span>Error Handling</a>
+    <a class="ni" href="#l6" style="--lc:var(--c6)"><span class="nb" style="background:var(--c6)">L6</span>API Gateway</a>
+    <a class="ni" href="#l7" style="--lc:var(--c7)"><span class="nb" style="background:var(--c7)">L7</span>Containers &amp; Docker</a>
+    <a class="ni" href="#l8" style="--lc:var(--c8)"><span class="nb" style="background:var(--c8)">L8</span>gRPC</a>
+    <div class="ndiv"></div>
+    <a class="ni" href="#la" style="--lc:var(--la)"><span class="nb" style="background:var(--la)">LA</span>Lab: Deployment</a>
+    <a class="ni" href="#lb" style="--lc:var(--lb)"><span class="nb" style="background:var(--lb)">LB</span>Lab: gRPC Student</a>
   </nav>
 </aside>
-
-<!-- MAIN CONTENT -->
 <main>
-  <h1 class="page-title">Web Service Development</h1>
-  <p class="page-sub">CS367 · Thammasat University · ครบทุก 8 บท</p>
+<div class="page-hero">
+  <h1>CS367 Web Service<br>Development Concepts</h1>
+  <p>Thammasat University · ครบทุกบท อธิบายจาก 0 พร้อมสอบ</p>
+</div>
 
-  <!-- ═══════════════════ L1 ═══════════════════ -->
-  <section class="lesson" id="l1" style="--lesson-color:var(--c1)">
-    <div class="lesson-header">
-      <div class="lesson-num">L1</div>
-      <div>
-        <div class="lesson-title">Web Fundamentals</div>
-      </div>
-      <span class="lesson-tag">Week 1</span>
+<!-- ══════════════════════════════════════════════
+     L1 — WEB FUNDAMENTALS
+══════════════════════════════════════════════ -->
+<section class="lesson" id="l1" style="--lc:var(--c1)">
+  <div class="lhead">
+    <div class="lnum">L1</div>
+    <div><div class="ltitle">Web Fundamentals</div></div>
+    <span class="ltag">Week 1</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>Web คืออะไร และทำงานยังไง?</h3>
+    <p>Web คือระบบส่งข้อมูลผ่าน Internet โดยใช้โปรโตคอล <strong>HTTP</strong> (HyperText Transfer Protocol) เป็นภาษากลาง ทุกครั้งที่เปิดเว็บไซต์ browser จะส่ง request ไปหา server แล้วรับ response กลับมาแสดงผล</p>
+    <div class="analogy">
+      <strong>เปรียบเทียบ:</strong> Web เหมือนระบบสั่งอาหาร — ลูกค้า (browser) เปิดเมนู (เว็บไซต์) แล้วสั่ง (request) ครัว (server) ทำแล้วส่งมา (response) ลูกค้าได้กิน (แสดงผล)
     </div>
+  </div>
 
+  <div class="teach-block">
+    <h3>Website vs Web Application</h3>
     <div class="cards">
       <div class="card">
-        <div class="card-title">Website vs Web App</div>
-        <ul>
-          <li><strong style="color:var(--c1)">Website</strong> — Static content, ดูอย่างเดียว, ไม่มี business logic</li>
-          <li><strong style="color:var(--c1)">Web App</strong> — Interactive, มี state, มี business logic (เช่น Gmail, Facebook)</li>
-        </ul>
+        <h4>Website (Static)</h4>
+        <p>แสดงข้อมูลอย่างเดียว ไม่มี logic ไม่มี interaction ทุกคนเห็นข้อมูลเดิม เช่น หน้าประวัติบริษัท, blog บทความ</p>
+        <p style="margin-top:8px;font-size:.82rem;color:var(--muted)">เปรียบกับ: ป้ายโฆษณา — ดูได้อย่างเดียว</p>
       </div>
       <div class="card">
-        <div class="card-title">API คืออะไร</div>
-        <p><strong>Application Programming Interface</strong> — สัญญาระหว่าง 2 ระบบ กำหนด input/output ที่ตกลงกัน ให้ระบบอื่น call ได้โดยไม่ต้องรู้ implementation ข้างใน</p>
+        <h4>Web Application (Dynamic)</h4>
+        <p>มี business logic, มี state, ข้อมูลเปลี่ยนตามผู้ใช้ เช่น Gmail, Facebook, ระบบจองตั๋ว</p>
+        <p style="margin-top:8px;font-size:.82rem;color:var(--muted)">เปรียบกับ: พนักงาน ATM — รับคำสั่ง ประมวลผล คืนผลลัพธ์</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Client-Server Model</h3>
+    <p>รูปแบบพื้นฐานของ web — มีสองฝั่งเสมอ:</p>
+    <div class="flow">
+      <div class="fb a">Client (Browser/App)</div>
+      <div class="fa">── HTTP Request ──→</div>
+      <div class="fb a">Server</div>
+      <div class="fa">←── HTTP Response ──</div>
+      <div class="fb a">Client</div>
+    </div>
+    <ul style="margin-top:12px;padding-left:20px;">
+      <li><strong>Client</strong> — ฝั่งที่ร้องขอข้อมูล (browser, mobile app, หรือ app อื่น)</li>
+      <li><strong>Server</strong> — ฝั่งที่ประมวลผลและตอบกลับ</li>
+    </ul>
+    <div class="why">
+      <strong>สำคัญมาก — Stateless:</strong> Server ไม่จำ client ระหว่าง requests เหมือนพนักงานร้านสะดวกซื้อที่จำลูกค้าแต่ละคนไม่ได้ ดังนั้น <strong>ทุก request ต้องพกข้อมูลที่จำเป็นไปครบ</strong> (เช่น token แสดงว่าเป็นใคร) ไม่งั้น server ไม่รู้ว่าคุยกับใคร
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>HTTP Methods — "กริยา" ของ Web</h3>
+    <p>HTTP กำหนดว่า request แต่ละอันต้องการ "ทำอะไร" กับข้อมูล ผ่าน method:</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Method</th><th>ความหมาย</th><th>เหมือนกับ</th><th>Idempotent?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>GET</strong></td><td>ดึงข้อมูล ไม่เปลี่ยนแปลงอะไร</td><td>ถามว่ามีอะไรบ้าง</td><td>✓ เรียกกี่ครั้งก็ได้ผลเดิม</td></tr>
+          <tr><td><strong>POST</strong></td><td>สร้างข้อมูลใหม่</td><td>กดสมัครสมาชิก</td><td>✗ เรียกซ้ำ = สร้างซ้ำ</td></tr>
+          <tr><td><strong>PUT</strong></td><td>แทนที่ทั้งหมด (ต้องส่งข้อมูลครบ)</td><td>เขียนฟอร์มใหม่ทั้งใบ</td><td>✓ เรียกซ้ำ = ผลเดิม</td></tr>
+          <tr><td><strong>PATCH</strong></td><td>แก้ไขบางส่วน</td><td>แก้แค่ชื่อ ไม่ต้องส่งทุกช่อง</td><td>✗ ขึ้นอยู่กับ implementation</td></tr>
+          <tr><td><strong>DELETE</strong></td><td>ลบข้อมูล</td><td>กดยกเลิก account</td><td>✓ ลบแล้วลบอีก = ลบแล้ว</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exam">
+      <div class="et">📝 ข้อสอบมักถาม</div>
+      <p><strong>Idempotent</strong> = เรียกกี่ครั้งก็ได้ผลลัพธ์เดิม GET/PUT/DELETE เป็น idempotent, POST/PATCH ไม่เป็น</p>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>API คืออะไร?</h3>
+    <p><strong>API</strong> (Application Programming Interface) = <strong>สัญญา</strong>ระหว่าง 2 ระบบ ว่าจะคุยกันยังไง กำหนดว่าต้องส่งอะไรมา แล้วจะได้อะไรกลับไป</p>
+    <div class="analogy">
+      <strong>เปรียบกับเมนูอาหาร:</strong> เมนูบอกว่า "สั่ง ข้าวผัด แล้วจะได้ข้าวผัด" นั่นคือ API เมนูไม่ได้บอกวิธีทำ แค่บอก input/output — API ก็เช่นกัน บอกว่า "ส่ง student_id มา จะได้ข้อมูลนักศึกษากลับไป" โดยไม่สนว่า server ทำยังไง
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Service Architecture: Decomposition &amp; Composition</h3>
+    <div class="cards">
+      <div class="card">
+        <h4>Decomposition (แตกย่อย)</h4>
+        <p>แบ่ง application ใหญ่ (Monolith) ออกเป็น services เล็กๆ แต่ละ service ทำแค่ 1 หน้าที่ ง่ายต่อการดูแล scale ได้เฉพาะส่วนที่ต้องการ</p>
+        <p style="margin-top:6px;font-size:.82rem;color:var(--muted)">Monolith → User Service + Order Service + Payment Service</p>
       </div>
       <div class="card">
-        <div class="card-title">Service Architecture</div>
+        <h4>Composition (รวมกัน)</h4>
+        <p>นำ services หลายตัวมาทำงานร่วมกัน มี 2 แบบ:</p>
         <ul>
-          <li><strong style="color:var(--c1)">Decomposition</strong> — แตก monolith → microservices เล็กๆ แต่ละ service ทำ 1 หน้าที่</li>
-          <li><strong style="color:var(--c1)">Composition</strong> — รวม services หลายตัวทำงานร่วมกัน (Orchestration / Choreography)</li>
+          <li><strong>Orchestration</strong> — มี coordinator กลางสั่ง</li>
+          <li><strong>Choreography</strong> — แต่ละ service ตัดสินใจเองผ่าน events</li>
         </ul>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     L2 — REST & ROA
+══════════════════════════════════════════════ -->
+<section class="lesson" id="l2" style="--lc:var(--c2)">
+  <div class="lhead">
+    <div class="lnum" style="color:#000">L2</div>
+    <div><div class="ltitle">REST &amp; ROA</div></div>
+    <span class="ltag">Week 2</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>ปัญหาก่อน REST — ทำไมถึงต้องมี?</h3>
+    <p>ลองนึกภาพว่าก่อนมี REST นักพัฒนาแต่ละคนออกแบบ API ตามใจ — บางคนใช้ <code>GET /getUser</code> บางคนใช้ <code>POST /fetchUser</code> บางคนใช้ <code>POST /user/retrieve</code> ไม่มีมาตรฐาน ทำให้ทีมอื่น หรือ developer ใหม่ต้องไปอ่าน documentation ทุกครั้ง</p>
+    <div class="why">
+      <strong>Roy Fielding แก้ปัญหานี้ในปี 2000:</strong> เขาเสนอ REST เป็น architectural style ในวิทยานิพนธ์ปริญญาเอก — กำหนด "กฎกลาง" ว่า API ควรออกแบบยังไง ให้ทุกคนเข้าใจได้โดยไม่ต้องอ่าน doc ทั้งหมด
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>3 สถาปัตยกรรม API</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Style</th><th>แนวคิด</th><th>ตัวอย่าง URL</th><th>เมื่อใช้</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--c2)">REST</strong></td><td>คิดแบบ "resource" (คำนาม) ใช้ HTTP method บอกว่าทำอะไร</td><td>GET /students/1<br>DELETE /students/1</td><td>Public API มาตรฐาน</td></tr>
+          <tr><td><strong style="color:var(--c2)">RPC-style</strong></td><td>คิดแบบ "action" (กริยา) ทุกอย่างคือ function call</td><td>POST /getStudent<br>POST /deleteStudent</td><td>Internal ที่ไม่สนมาตรฐาน</td></tr>
+          <tr><td><strong style="color:var(--c2)">REST-RPC Hybrid</strong></td><td>ส่วนใหญ่ REST แต่บาง action ที่ไม่ match CRUD ใช้ verb</td><td>POST /students/1/activate<br>POST /orders/1/cancel</td><td>ใช้ทั่วไปในโลกจริง</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip">
+      <strong>ในโลกจริง:</strong> ส่วนใหญ่เป็น Hybrid — REST ไม่ได้ครอบคลุมทุก use case เช่น "activate account" ไม่ใช่ create/read/update/delete ชัดเจน จึงต้องใช้ verb บ้าง
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>ROA — Resource-Oriented Architecture</h3>
+    <p>ROA คือแนวทางออกแบบ API โดยยึด <strong>resource</strong> (สิ่งของ/ข้อมูล) เป็นศูนย์กลาง มี 4 คุณสมบัติที่ต้องมี:</p>
 
     <details open>
-      <summary>Client-Server Model</summary>
-      <div class="details-body">
-        <div class="flow" style="margin-bottom:14px">
-          <div class="flow-box accent">Client</div>
-          <div class="flow-arr">──── Request ────→</div>
-          <div class="flow-box accent">Server</div>
-          <div class="flow-arr">←── Response ────</div>
-          <div class="flow-box accent">Client</div>
+      <summary>1. Addressability — ทุก resource ต้องมี URI</summary>
+      <div class="db">
+        <p>ทุกสิ่งที่เราต้องการเข้าถึงต้องมีที่อยู่ (URI) เฉพาะของตัวเอง เหมือนทุกบ้านต้องมีที่อยู่ถึงจะส่งจดหมายได้</p>
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-plaintext">/students              → นักศึกษาทั้งหมด
+/students/12345        → นักศึกษา id 12345 คนเดียว
+/students/12345/grades → เกรดของนักศึกษา 12345
+/courses/CS367         → วิชา CS367
+/courses/CS367/students → นักศึกษาที่ลงทะเบียน CS367</code></pre>
         </div>
-        <ul style="font-size:.88rem;color:var(--dim);padding-left:18px">
-          <li>Stateless by default — server ไม่จำ state ของ client ระหว่าง requests</li>
-          <li>ทุก request ต้องพกข้อมูลที่จำเป็นครบถ้วน (เช่น token)</li>
-        </ul>
+        <div class="why">
+          <strong>ทำไมต้องมี URI เฉพาะ?</strong> ถ้าทุกอย่างใช้ URL เดียวกัน เช่น <code>POST /api</code> แล้วแยกด้วย body เราไม่รู้ว่า resource นั้นอยู่ที่ไหน ไม่สามารถ bookmark, cache, หรือ link ได้
+        </div>
+      </div>
+    </details>
+
+    <details open>
+      <summary>2. Statelessness — Server ไม่จำ state ของ client</summary>
+      <div class="db">
+        <p>ทุก request ต้องพกข้อมูลที่จำเป็นมาครบ server ไม่เก็บ session ว่า "ตอนนี้ client ทำอะไรอยู่"</p>
+        <div class="analogy">
+          <strong>เปรียบกับ:</strong> call center ที่มีพนักงานหลายคน ถ้าโทรครั้งแรกคุยกับพนักงาน A แล้วโทรครั้งที่สองเจอพนักงาน B — B ไม่รู้ว่าคุณคุยอะไรกับ A ไปแล้ว ดังนั้นคุณต้องบอกข้อมูลซ้ำใหม่ทุกครั้ง (เช่น ชื่อ, เลขที่สั่งซื้อ)
+        </div>
+        <div class="why">
+          <strong>ทำไมดี?</strong> ถ้า server ไม่เก็บ state เราสามารถเพิ่ม server ได้กี่ตัวก็ได้ เพราะ request ใดๆ ไปหา server ตัวไหนก็ได้ผลเหมือนกัน — นี่คือพื้นฐานของ horizontal scaling
+        </div>
+        <div class="warn">
+          <strong>ข้อสอบมักหลอก:</strong> Stateless ไม่ได้หมายความว่าไม่มี state — client ยังมี state ได้ (เช่น cart, login status) แค่ server ไม่เก็บแทน client เท่านั้น
+        </div>
       </div>
     </details>
 
     <details>
-      <summary>HTTP Methods</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Method</th><th>ความหมาย</th><th>Idempotent?</th><th>ตัวอย่าง</th></tr></thead>
-            <tbody>
-              <tr><td><code>GET</code></td><td>ดึงข้อมูล</td><td>✓ Yes</td><td>GET /students/1</td></tr>
-              <tr><td><code>POST</code></td><td>สร้างใหม่</td><td>✗ No</td><td>POST /students</td></tr>
-              <tr><td><code>PUT</code></td><td>แทนทั้งหมด</td><td>✓ Yes</td><td>PUT /students/1</td></tr>
-              <tr><td><code>PATCH</code></td><td>แก้บางส่วน</td><td>✗ No</td><td>PATCH /students/1</td></tr>
-              <tr><td><code>DELETE</code></td><td>ลบ</td><td>✓ Yes</td><td>DELETE /students/1</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="font-size:.82rem;color:var(--muted);margin-top:8px">Idempotent = เรียกกี่ครั้งก็ได้ผลลัพธ์เดิม</p>
-      </div>
-    </details>
-  </section>
-
-  <!-- ═══════════════════ L2 ═══════════════════ -->
-  <section class="lesson" id="l2" style="--lesson-color:var(--c2)">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#000">L2</div>
-      <div><div class="lesson-title">REST &amp; ROA</div></div>
-      <span class="lesson-tag">Week 2</span>
-    </div>
-
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">REST คืออะไร</div>
-        <p><strong>Representational State Transfer</strong> — สถาปัตยกรรมสำหรับ web services โดย Roy Fielding ปี 2000 (วิทยานิพนธ์ปริญญาเอก) ไม่ใช่ protocol แต่เป็น architectural style</p>
-      </div>
-      <div class="card">
-        <div class="card-title">ROA คืออะไร</div>
-        <p><strong>Resource-Oriented Architecture</strong> — แนวทางออกแบบ API โดยเน้น resources เป็นศูนย์กลาง มี 4 คุณสมบัติหลัก</p>
-      </div>
-    </div>
-
-    <details open>
-      <summary>3 สถาปัตยกรรม: REST vs RPC vs Hybrid</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Style</th><th>แนวคิด</th><th>ตัวอย่าง</th><th>ข้อสังเกต</th></tr></thead>
-            <tbody>
-              <tr><td><strong style="color:var(--c2)">REST</strong></td><td>Resource-based, nouns</td><td>GET /users/1</td><td>มาตรฐานสากล</td></tr>
-              <tr><td><strong style="color:var(--c2)">RPC-style</strong></td><td>Action-based, verbs</td><td>POST /getUser</td><td>ง่ายแต่ไม่เป็นมาตรฐาน</td></tr>
-              <tr><td><strong style="color:var(--c2)">REST-RPC Hybrid</strong></td><td>ผสม</td><td>POST /users/1/activate</td><td>ใช้เมื่อ action ไม่ match CRUD</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-
-    <details open>
-      <summary>ROA 4 คุณสมบัติหลัก</summary>
-      <div class="details-body">
-        <div class="cards" style="margin-top:8px">
-          <div class="card">
-            <div class="card-title">1. Addressability</div>
-            <p>ทุก resource มี URI เฉพาะของตัวเอง</p>
-            <div class="code-wrap" style="margin-top:8px">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-plaintext">/students/12345
-/courses/CS367/enrollments
-/students/12345/grades</code></pre>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">2. Statelessness</div>
-            <p>Server ไม่เก็บ state ของ client — ทุก request ต้องพกข้อมูลครบ (เช่น JWT token) ใน header</p>
-          </div>
-          <div class="card">
-            <div class="card-title">3. Connectedness (HATEOAS)</div>
-            <p>Response มี links บอกว่าทำอะไรต่อได้บ้าง</p>
-            <div class="code-wrap" style="margin-top:8px">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-json">{
-  "id": 1,
-  "links": {
-    "self": "/students/1",
-    "courses": "/students/1/courses",
-    "grades": "/students/1/grades"
-  }
-}</code></pre>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">4. Uniform Interface</div>
-            <p>ใช้ HTTP methods ตามความหมายมาตรฐาน ไม่คิดเอง — GET=read, POST=create, PUT=replace, DELETE=delete</p>
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>URI Design Rules</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Rule</th><th>✓ ถูก</th><th>✗ ผิด</th></tr></thead>
-            <tbody>
-              <tr><td>ใช้ nouns ไม่ใช่ verbs</td><td>/students</td><td>/getStudents</td></tr>
-              <tr><td>Plural</td><td>/students</td><td>/student</td></tr>
-              <tr><td>Hierarchical</td><td>/courses/CS367/students</td><td>/studentsByCourse</td></tr>
-              <tr><td>Lowercase + hyphen</td><td>/course-schedules</td><td>/CourseSchedules</td></tr>
-              <tr><td>ไม่มี extension</td><td>/students/1</td><td>/students/1.json</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-  </section>
-
-  <!-- ═══════════════════ L3 ═══════════════════ -->
-  <section class="lesson" id="l3" style="--lesson-color:var(--c3)">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#000">L3</div>
-      <div><div class="lesson-title">Data Formats &amp; APIs</div></div>
-      <span class="lesson-tag">Week 3</span>
-    </div>
-
-    <details open>
-      <summary>Request Parameters — 3 ชนิด</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>ชนิด</th><th>ตำแหน่ง</th><th>ใช้เมื่อ</th><th>ตัวอย่าง</th></tr></thead>
-            <tbody>
-              <tr><td><strong style="color:var(--c3)">Path</strong></td><td>ใน URL path</td><td>ระบุ specific resource</td><td>GET /students/<strong>12345</strong></td></tr>
-              <tr><td><strong style="color:var(--c3)">Query</strong></td><td>หลัง ? ใน URL</td><td>กรอง, เรียงลำดับ, paginate</td><td>GET /students?year=3&amp;sort=name</td></tr>
-              <tr><td><strong style="color:var(--c3)">Body</strong></td><td>Request body</td><td>ส่ง data (POST/PUT/PATCH)</td><td>POST /students → JSON body</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-
-    <details open>
-      <summary>JSON Data Types</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <summary>3. Connectedness (HATEOAS) — Response มี links นำทาง</summary>
+      <div class="db">
+        <p>Hypermedia As The Engine Of Application State — response ควรมี links บอกว่าทำอะไรได้ต่อ เหมือน web page มี hyperlinks</p>
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
           <pre><code class="language-json">{
-  "name": "Alice",        // String — ใส่ใน quotes เสมอ
-  "age": 21,              // Number — ไม่มี quotes
-  "gpa": 3.75,            // Number (float)
-  "active": true,         // Boolean — true หรือ false
-  "nickname": null,       // Null — ไม่มีค่า
-  "courses": [            // Array — รายการ
-    "CS367",
-    "CS101"
-  ],
-  "address": {            // Object — nested key-value
-    "city": "Bangkok",
-    "zip": "10200"
+  "id": 12345,
+  "name": "Alice",
+  "_links": {
+    "self": "/students/12345",
+    "courses": "/students/12345/courses",
+    "grades": "/students/12345/grades",
+    "update": "/students/12345"
   }
 }</code></pre>
+        </div>
+        <div class="tip">
+          <strong>ประโยชน์:</strong> Client ไม่ต้อง hardcode URLs — ตาม links ใน response ได้เลย ถ้า server เปลี่ยน URL structure ก็แค่เปลี่ยน links ใน response
         </div>
       </div>
     </details>
 
     <details>
-      <summary>XML Anatomy</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  &lt;!-- Declaration --&gt;
-&lt;student id="12345"&gt;                       &lt;!-- Root + attribute --&gt;
-  &lt;name&gt;Alice&lt;/name&gt;                       &lt;!-- Child element --&gt;
-  &lt;major&gt;Computer Science&lt;/major&gt;
-  &lt;courses&gt;                                &lt;!-- Nested elements --&gt;
+      <summary>4. Uniform Interface — ใช้ HTTP methods ตรงตามความหมาย</summary>
+      <div class="db">
+        <p>ต้องใช้ HTTP methods ตามความหมายมาตรฐาน ไม่คิดเอง ทุกคนที่รู้จัก REST จะเข้าใจ API ได้ทันที</p>
+        <div class="tw">
+          <table>
+            <thead><tr><th>ต้องการทำอะไร</th><th>✓ Uniform Interface</th><th>✗ ไม่ใช่</th></tr></thead>
+            <tbody>
+              <tr><td>ดูนักศึกษา</td><td>GET /students/1</td><td>POST /getStudent</td></tr>
+              <tr><td>สร้างนักศึกษา</td><td>POST /students</td><td>GET /students/create</td></tr>
+              <tr><td>ลบนักศึกษา</td><td>DELETE /students/1</td><td>POST /students/1/delete</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="teach-block">
+    <h3>URI Design Rules — กฎการตั้งชื่อ URL</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>กฎ</th><th>✓ ถูก</th><th>✗ ผิด</th><th>เหตุผล</th></tr></thead>
+        <tbody>
+          <tr><td>ใช้ nouns ไม่ใช่ verbs</td><td>/students</td><td>/getStudents</td><td>Method บอก action แล้ว</td></tr>
+          <tr><td>Plural</td><td>/students</td><td>/student</td><td>Collection = หลายอัน</td></tr>
+          <tr><td>Hierarchical</td><td>/courses/CS367/students</td><td>/studentsByCourse?id=CS367</td><td>แสดงความสัมพันธ์</td></tr>
+          <tr><td>lowercase + hyphen</td><td>/course-schedules</td><td>/CourseSchedules, /course_schedules</td><td>มาตรฐาน URL</td></tr>
+          <tr><td>ไม่มี file extension</td><td>/students/1</td><td>/students/1.json</td><td>ใช้ Accept header แทน</td></tr>
+          <tr><td>ไม่มี version ใน path (ถ้าทำได้)</td><td>Header versioning</td><td>/v1/students</td><td>ทาง REST แนะนำ header</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exam">
+      <div class="et">📝 ข้อสอบมักถาม</div>
+      <ul>
+        <li>REST ≠ Protocol — เป็นแค่ architectural style</li>
+        <li>Roy Fielding, ปี 2000, วิทยานิพนธ์ปริญญาเอก UC Irvine</li>
+        <li>ROA 4 properties: Addressability, Statelessness, Connectedness, Uniform Interface</li>
+        <li>Stateless ไม่ได้แปลว่า application ไม่มี state</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     L3 — DATA FORMATS & APIs
+══════════════════════════════════════════════ -->
+<section class="lesson" id="l3" style="--lc:var(--c3)">
+  <div class="lhead">
+    <div class="lnum" style="color:#000">L3</div>
+    <div><div class="ltitle">Data Formats &amp; APIs</div></div>
+    <span class="ltag">Week 3</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>Request Parameters — ส่งข้อมูลไปหา Server ยังไง?</h3>
+    <p>มี 3 ทางหลักในการส่งข้อมูลไปกับ request แต่ละทางใช้กรณีต่างกัน:</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>ชนิด</th><th>ตำแหน่ง</th><th>ใช้สำหรับ</th><th>ตัวอย่าง</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--c3)">Path Parameter</strong></td><td>ใน URL path</td><td>ระบุ specific resource (บังคับ)</td><td>GET /students/<strong>12345</strong></td></tr>
+          <tr><td><strong style="color:var(--c3)">Query Parameter</strong></td><td>หลัง ? ใน URL</td><td>กรอง, เรียง, paginate (optional)</td><td>GET /students?year=<strong>3</strong>&amp;sort=<strong>name</strong></td></tr>
+          <tr><td><strong style="color:var(--c3)">Request Body</strong></td><td>Body ของ request</td><td>ส่งข้อมูลจำนวนมาก (POST/PUT/PATCH)</td><td>POST /students → JSON body</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="why">
+      <strong>ทำไมไม่ส่งทุกอย่างทาง body?</strong> GET request ไม่มี body ตามมาตรฐาน HTTP — และ URL ทำให้ bookmark/cache/share ได้ ดังนั้น filter ต่างๆ ควรอยู่ใน query string
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>JSON — JavaScript Object Notation</h3>
+    <p>Format มาตรฐานของการส่งข้อมูลใน REST API ปัจจุบัน — มนุษย์อ่านได้ เครื่องอ่านได้ กระชับ</p>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-json">{
+  "name": "Alice",          // String — ต้องมี double quotes เสมอ
+  "studentId": 12345,       // Number — ไม่มี quotes, รองรับทศนิยม
+  "gpa": 3.75,              // Number (float)
+  "isActive": true,         // Boolean — true หรือ false (lowercase เท่านั้น!)
+  "advisor": null,          // Null — ไม่มีค่า
+  "courses": [              // Array — รายการ
+    "CS367",
+    "CS101",
+    "MATH201"
+  ],
+  "address": {              // Object — nested key-value pairs
+    "city": "Bangkok",
+    "district": "Pathumthani",
+    "zip": "12120"
+  }
+}</code></pre>
+    </div>
+    <div class="warn">
+      <strong>ข้อผิดพลาดที่พบบ่อย:</strong> JSON ใช้ double quotes เท่านั้น (ไม่ใช่ single quotes), ตัวสุดท้ายใน object/array ไม่มี trailing comma, Boolean ต้องเป็น <code>true</code>/<code>false</code> (lowercase) ไม่ใช่ <code>True</code>/<code>False</code>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>XML — eXtensible Markup Language</h3>
+    <p>Format เก่ากว่า JSON ใช้ tag เหมือน HTML ยังพบมากใน Enterprise systems และ SOAP APIs</p>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  &lt;!-- Declaration บังคับอยู่บรรทัดแรก --&gt;
+&lt;student id="12345"&gt;                     &lt;!-- Root element + attribute --&gt;
+  &lt;name&gt;Alice&lt;/name&gt;                     &lt;!-- Child element --&gt;
+  &lt;gpa&gt;3.75&lt;/gpa&gt;                        &lt;!-- ทุกอย่างเป็น string ใน XML! --&gt;
+  &lt;courses&gt;                              &lt;!-- Nested elements --&gt;
     &lt;course code="CS367"&gt;Web Services&lt;/course&gt;
+    &lt;course code="CS101"&gt;Intro to CS&lt;/course&gt;
   &lt;/courses&gt;
 &lt;/student&gt;</code></pre>
-        </div>
-      </div>
-    </details>
+    </div>
+    <div class="tw" style="margin-top:12px">
+      <table>
+        <thead><tr><th></th><th>JSON</th><th>XML</th></tr></thead>
+        <tbody>
+          <tr><td>ขนาด</td><td>กระชับ</td><td>Verbose (ต้อง opening+closing tags)</td></tr>
+          <tr><td>Data Types</td><td>มี (string, number, boolean, null)</td><td>ทุกอย่างเป็น string</td></tr>
+          <tr><td>Schema</td><td>JSON Schema</td><td>XSD (XML Schema Definition)</td></tr>
+          <tr><td>Comment</td><td>ไม่รองรับ</td><td>รองรับ &lt;!-- --&gt;</td></tr>
+          <tr><td>ใช้งานจริง</td><td>REST API ทั่วไป</td><td>SOAP, Enterprise, Legacy systems</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    <details>
-      <summary>JSON vs XML</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th></th><th>JSON</th><th>XML</th></tr></thead>
-            <tbody>
-              <tr><td>Verbosity</td><td>กระชับ</td><td>Verbose (ต้องมี closing tags)</td></tr>
-              <tr><td>Data Types</td><td>มี (number, bool, null)</td><td>ทุกอย่างเป็น string</td></tr>
-              <tr><td>Schema</td><td>JSON Schema</td><td>XSD (XML Schema Definition)</td></tr>
-              <tr><td>Comments</td><td>ไม่รองรับ</td><td>รองรับ &lt;!-- --&gt;</td></tr>
-              <tr><td>Attributes</td><td>ไม่มี (ใช้ nested object)</td><td>มี (id="123")</td></tr>
-              <tr><td>ใช้งานจริง</td><td>REST API ส่วนใหญ่</td><td>Enterprise/Legacy/SOAP</td></tr>
-              <tr><td>Parse speed</td><td>เร็วกว่า</td><td>ช้ากว่า</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
+  <div class="teach-block">
+    <h3>MIME Types — บอก Content Type ของ Body</h3>
+    <p>เหมือนใส่ป้าย "ข้างในกล่องมีอะไร" — ส่งใน HTTP header <code>Content-Type</code> และ <code>Accept</code></p>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-http">Content-Type: application/json     // บอก server ว่า body ที่ส่งไปเป็น JSON
+Accept: application/json           // บอก server ว่าต้องการ response เป็น JSON</code></pre>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>MIME Type</th><th>ใช้สำหรับ</th></tr></thead>
+        <tbody>
+          <tr><td><code>application/json</code></td><td>JSON data (REST API ส่วนใหญ่)</td></tr>
+          <tr><td><code>application/xml</code></td><td>XML data</td></tr>
+          <tr><td><code>text/html</code></td><td>HTML pages</td></tr>
+          <tr><td><code>text/plain</code></td><td>Plain text</td></tr>
+          <tr><td><code>image/png</code>, <code>image/jpeg</code></td><td>Images</td></tr>
+          <tr><td><code>multipart/form-data</code></td><td>File upload</td></tr>
+          <tr><td><code>application/x-www-form-urlencoded</code></td><td>HTML form submit</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    <details>
-      <summary>MIME Types</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>MIME Type</th><th>ใช้สำหรับ</th></tr></thead>
-            <tbody>
-              <tr><td><code>application/json</code></td><td>JSON data</td></tr>
-              <tr><td><code>application/xml</code></td><td>XML data</td></tr>
-              <tr><td><code>text/html</code></td><td>HTML pages</td></tr>
-              <tr><td><code>text/plain</code></td><td>Plain text</td></tr>
-              <tr><td><code>image/png</code>, <code>image/jpeg</code></td><td>Images</td></tr>
-              <tr><td><code>multipart/form-data</code></td><td>File upload (form)</td></tr>
-              <tr><td><code>application/x-www-form-urlencoded</code></td><td>HTML form data</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="font-size:.82rem;color:var(--muted);margin-top:8px">ใส่ใน Header: <code>Content-Type: application/json</code> และ <code>Accept: application/json</code></p>
-      </div>
-    </details>
+  <div class="teach-block">
+    <h3>HTTP Status Codes — รหัสคำตอบจาก Server</h3>
+    <p>Server ตอบกลับ 3 หลักเสมอ บอกว่าเกิดอะไรขึ้น:</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Code</th><th>ชื่อ</th><th>ความหมาย</th><th>เมื่อใช้</th></tr></thead>
+        <tbody>
+          <tr><td><span class="b b2">200</span></td><td>OK</td><td>สำเร็จ</td><td>GET, PUT, PATCH ที่สำเร็จ</td></tr>
+          <tr><td><span class="b b2">201</span></td><td>Created</td><td>สร้างใหม่สำเร็จ</td><td>POST ที่สร้าง resource ใหม่</td></tr>
+          <tr><td><span class="b b2">204</span></td><td>No Content</td><td>สำเร็จแต่ไม่มี body</td><td>DELETE สำเร็จ</td></tr>
+          <tr><td><span class="b b3">301</span></td><td>Moved Permanently</td><td>URL เปลี่ยนถาวร</td><td>URL เปลี่ยน browser redirect</td></tr>
+          <tr><td><span class="b b3">304</span></td><td>Not Modified</td><td>ใช้ cache ได้</td><td>Resource ไม่เปลี่ยนนับตั้งแต่ครั้งล่าสุด</td></tr>
+          <tr><td><span class="b b4">400</span></td><td>Bad Request</td><td>Request ผิด format</td><td>JSON ผิด, ขาด required field</td></tr>
+          <tr><td><span class="b b4">401</span></td><td>Unauthorized</td><td>ยังไม่ได้ login</td><td>ไม่มี token หรือ token ผิด</td></tr>
+          <tr><td><span class="b b4">403</span></td><td>Forbidden</td><td>Login แล้วแต่ไม่มีสิทธิ์</td><td>User ธรรมดาเข้า admin page</td></tr>
+          <tr><td><span class="b b4">404</span></td><td>Not Found</td><td>ไม่พบ resource</td><td>Student id ไม่มีในระบบ</td></tr>
+          <tr><td><span class="b b4">422</span></td><td>Unprocessable Entity</td><td>Business validation ล้มเหลว</td><td>ยอดเงินไม่พอ, email ซ้ำ</td></tr>
+          <tr><td><span class="b b4">429</span></td><td>Too Many Requests</td><td>Rate limit เกิน</td><td>เรียก API เกินที่กำหนด</td></tr>
+          <tr><td><span class="b b5">500</span></td><td>Internal Server Error</td><td>Server มีปัญหา</td><td>Bug ใน code, null pointer exception</td></tr>
+          <tr><td><span class="b b5">502</span></td><td>Bad Gateway</td><td>Upstream server ตอบผิด</td><td>Service ข้างหลัง error</td></tr>
+          <tr><td><span class="b b5">503</span></td><td>Service Unavailable</td><td>Service ไม่พร้อม</td><td>Server down, maintenance</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exam">
+      <div class="et">📝 ข้อสอบมักถาม</div>
+      <ul>
+        <li><strong>401 vs 403:</strong> 401 = ยังไม่รู้ว่าคุณคือใคร (ต้อง login), 403 = รู้แล้วว่าคุณคือใคร แต่ไม่มีสิทธิ์</li>
+        <li><strong>400 vs 422:</strong> 400 = format ผิด (JSON แตก, missing field), 422 = format ถูกแต่ business logic ไม่ผ่าน</li>
+      </ul>
+    </div>
+  </div>
 
-    <details>
-      <summary>HTTP Status Codes</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Code</th><th>ชื่อ</th><th>ความหมาย</th></tr></thead>
-            <tbody>
-              <tr><td><span class="badge b2xx">200</span></td><td>OK</td><td>สำเร็จ (GET, PUT, PATCH)</td></tr>
-              <tr><td><span class="badge b2xx">201</span></td><td>Created</td><td>สร้างใหม่สำเร็จ (POST)</td></tr>
-              <tr><td><span class="badge b2xx">204</span></td><td>No Content</td><td>สำเร็จแต่ไม่มี body (DELETE)</td></tr>
-              <tr><td><span class="badge b3xx">301</span></td><td>Moved Permanently</td><td>URL เปลี่ยนถาวร</td></tr>
-              <tr><td><span class="badge b3xx">304</span></td><td>Not Modified</td><td>ใช้ cached version ได้</td></tr>
-              <tr><td><span class="badge b4xx">400</span></td><td>Bad Request</td><td>Request ผิด format/validation</td></tr>
-              <tr><td><span class="badge b4xx">401</span></td><td>Unauthorized</td><td>ยังไม่ได้ authenticate</td></tr>
-              <tr><td><span class="badge b4xx">403</span></td><td>Forbidden</td><td>Authenticate แล้วแต่ไม่มีสิทธิ์</td></tr>
-              <tr><td><span class="badge b4xx">404</span></td><td>Not Found</td><td>ไม่พบ resource</td></tr>
-              <tr><td><span class="badge b4xx">422</span></td><td>Unprocessable Entity</td><td>Validation business logic ล้มเหลว</td></tr>
-              <tr><td><span class="badge b4xx">429</span></td><td>Too Many Requests</td><td>Rate limit เกิน</td></tr>
-              <tr><td><span class="badge b5xx">500</span></td><td>Internal Server Error</td><td>Server crash/bug</td></tr>
-              <tr><td><span class="badge b5xx">502</span></td><td>Bad Gateway</td><td>Upstream service ตอบผิด</td></tr>
-              <tr><td><span class="badge b5xx">503</span></td><td>Service Unavailable</td><td>Server/service down</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>OpenAPI / Swagger + YAML</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-yaml">openapi: 3.0.0
+  <div class="teach-block">
+    <h3>OpenAPI / Swagger — เอกสาร API แบบมาตรฐาน</h3>
+    <p>OpenAPI Specification คือมาตรฐานการเขียน API documentation ด้วย YAML หรือ JSON — Swagger คือ toolset ที่ generate UI สวยๆ จาก spec นั้น</p>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-yaml">openapi: 3.0.0           # OpenAPI version
 info:
   title: Student API
   version: 1.0.0
@@ -748,571 +564,823 @@ info:
 paths:
   /students:
     get:
-      summary: Get all students
+      summary: ดึงรายชื่อนักศึกษาทั้งหมด
       parameters:
         - name: year
-          in: query
+          in: query           # query parameter
+          required: false
           schema:
             type: integer
       responses:
         '200':
-          description: List of students
-    post:
-      summary: Create student
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Student'
-      responses:
-        '201':
-          description: Student created
+          description: สำเร็จ — คืน array ของนักศึกษา
 
-  /students/{id}:
+  /students/{id}:            # path parameter ใช้ {}
     get:
+      summary: ดึงข้อมูลนักศึกษาตาม ID
       parameters:
         - name: id
-          in: path
-          required: true
+          in: path            # path parameter
+          required: true      # path param บังคับเสมอ
           schema:
             type: integer
       responses:
         '200':
-          description: Student found
+          description: พบนักศึกษา
         '404':
-          description: Not found</code></pre>
-        </div>
-        <div class="cards" style="margin-top:12px">
-          <div class="card">
-            <div class="card-title">YAML Rules</div>
-            <ul>
-              <li>Indentation = structure (ใช้ spaces ห้าม tab)</li>
-              <li><code>key: value</code></li>
-              <li>List: <code>- item</code></li>
-              <li>String ไม่ต้อง quotes (ยกเว้น special chars)</li>
-              <li>Comment: <code># comment</code></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </details>
-  </section>
-
-  <!-- ═══════════════════ L4 ═══════════════════ -->
-  <section class="lesson" id="l4" style="--lesson-color:var(--c4)">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#000">L4</div>
-      <div><div class="lesson-title">Security &amp; Spring Boot</div></div>
-      <span class="lesson-tag">Week 4</span>
+          description: ไม่พบนักศึกษา</code></pre>
     </div>
+    <div class="cards" style="margin-top:12px">
+      <div class="card">
+        <h4>YAML Rules</h4>
+        <ul>
+          <li>Indentation = structure (ใช้ spaces ห้ามใช้ tab)</li>
+          <li><code>key: value</code> (มีช่องว่างหลัง colon)</li>
+          <li>List item ขึ้นต้นด้วย <code>- </code></li>
+          <li>String ไม่ต้อง quotes ยกเว้น special characters</li>
+          <li>Comment ใช้ <code>#</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- ══════════════════════════════════════════════
+     L4 — SECURITY & SPRING BOOT
+══════════════════════════════════════════════ -->
+<section class="lesson" id="l4" style="--lc:var(--c4)">
+  <div class="lhead">
+    <div class="lnum" style="color:#000">L4</div>
+    <div><div class="ltitle">Security &amp; Spring Boot</div></div>
+    <span class="ltag">Week 4</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>Authentication vs Authorization — สองสิ่งที่ต่างกันมาก</h3>
+    <div class="analogy">
+      <strong>เปรียบกับเข้าออฟฟิศ:</strong> ตอนเข้าประตู รปภ. ดูบัตร = <strong>Authentication</strong> (คุณคือใคร?) เมื่อเข้าแล้ว จะเข้าห้อง CEO ไม่ได้เพราะไม่มีสิทธิ์ = <strong>Authorization</strong> (คุณทำอะไรได้บ้าง?)
+    </div>
     <div class="cards">
       <div class="card">
-        <div class="card-title">AuthN vs AuthZ</div>
+        <h4>Authentication (AuthN) — ยืนยันตัวตน</h4>
+        <p>ตอบคำถาม "คุณคือใคร?" — ต้องผ่านก่อน authorization เสมอ</p>
         <ul>
-          <li><strong style="color:var(--c4)">Authentication (AuthN)</strong> — คุณคือใคร? ยืนยันตัวตน</li>
-          <li><strong style="color:var(--c4)">Authorization (AuthZ)</strong> — คุณทำอะไรได้บ้าง? ตรวจสิทธิ์</li>
-          <li>ลำดับ: AuthN ก่อนเสมอ → แล้วจึง AuthZ</li>
+          <li>Username + Password</li>
+          <li>JWT Token</li>
+          <li>Biometric (fingerprint, face)</li>
+          <li>OAuth (ล็อกอินผ่าน Google)</li>
         </ul>
       </div>
       <div class="card">
-        <div class="card-title">MFA Factors</div>
+        <h4>Authorization (AuthZ) — ตรวจสิทธิ์</h4>
+        <p>ตอบคำถาม "คุณทำอะไรได้บ้าง?" — ทำหลัง authn เสมอ</p>
         <ul>
-          <li>Something you <strong>know</strong> — password, PIN</li>
-          <li>Something you <strong>have</strong> — OTP, hardware security key</li>
-          <li>Something you <strong>are</strong> — fingerprint, face ID (biometric)</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="card-title">Access Control Models</div>
-        <ul>
-          <li><strong style="color:var(--c4)">RBAC</strong> — Role-Based: User → Role → Permission</li>
-          <li><strong style="color:var(--c4)">ABAC</strong> — Attribute-Based: ตัดสินจาก attributes (department, time, location)</li>
-          <li><strong style="color:var(--c4)">ReBAC</strong> — Relationship-Based: สิทธิ์ขึ้นกับ relationship (เช่น Google Docs: owner/editor/viewer per document)</li>
+          <li>RBAC — ตาม role</li>
+          <li>ABAC — ตาม attributes</li>
+          <li>ReBAC — ตาม relationships</li>
+          <li>ACL — รายชื่อสิทธิ์เฉพาะราย</li>
         </ul>
       </div>
     </div>
+  </div>
 
+  <div class="teach-block">
+    <h3>MFA — Multi-Factor Authentication</h3>
+    <p>การยืนยันตัวตนหลายชั้น — ต้องผ่านหลายปัจจัย ทำให้ปลอดภัยกว่า password อย่างเดียว</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Factor</th><th>คืออะไร</th><th>ตัวอย่าง</th><th>ข้อเสีย</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Something you KNOW</strong></td><td>สิ่งที่รู้</td><td>Password, PIN, security question</td><td>ถูกขโมยได้ถ้า leak</td></tr>
+          <tr><td><strong>Something you HAVE</strong></td><td>สิ่งที่มี</td><td>OTP จาก app, SMS, hardware key</td><td>อาจทำหาย</td></tr>
+          <tr><td><strong>Something you ARE</strong></td><td>สิ่งที่เป็น</td><td>Fingerprint, Face ID, voice</td><td>เปลี่ยนไม่ได้ถ้าถูกขโมย</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip">
+      <strong>MFA ที่ดี</strong> ใช้ factor จาก 2 หมวดขึ้นไป เช่น password (know) + OTP (have) — ถ้าใช้ 2 อย่างจาก know เช่น password + PIN ไม่นับว่า MFA ที่แข็งแกร่ง
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Access Control Models</h3>
     <details open>
-      <summary>JWT — JSON Web Token</summary>
-      <div class="details-body">
-        <div class="cards" style="margin-top:8px">
-          <div class="card">
-            <div class="card-title">Structure</div>
-            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">3 ส่วนคั่นด้วย <code>.</code> แต่ละส่วน base64url encoded</p>
-            <div class="flow">
-              <div class="flow-box accent">Header</div>
-              <div class="flow-arr">.</div>
-              <div class="flow-box accent">Payload</div>
-              <div class="flow-arr">.</div>
-              <div class="flow-box accent">Signature</div>
-            </div>
-            <div class="code-wrap" style="margin-top:10px">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-json">// Payload (decoded)
+      <summary>RBAC — Role-Based Access Control</summary>
+      <div class="db">
+        <p>กำหนดสิทธิ์ผ่าน Role — user ได้รับ role แล้ว role มี permissions</p>
+        <div class="flow">
+          <div class="fb a">User</div><div class="fa">→</div>
+          <div class="fb">Role (admin)</div><div class="fa">→</div>
+          <div class="fb">Permissions (read, write, delete)</div>
+        </div>
+        <p style="margin-top:10px;font-size:.88rem;color:var(--dim)">ง่ายต่อการจัดการ — เปลี่ยน role ของคน = เปลี่ยนสิทธิ์ทันที ใช้กับ: ระบบมี roles ชัดเจน (admin, editor, viewer)</p>
+      </div>
+    </details>
+    <details>
+      <summary>ABAC — Attribute-Based Access Control</summary>
+      <div class="db">
+        <p>ตัดสินจาก attributes หลายอย่างพร้อมกัน ยืดหยุ่นกว่า RBAC มาก</p>
+        <div class="analogy">
+          <strong>ตัวอย่าง:</strong> "ให้เข้าถึงข้อมูลได้ ถ้า department=HR <strong>และ</strong> time=08:00-18:00 <strong>และ</strong> location=office" — RBAC ทำแบบนี้ไม่ได้ โดยไม่สร้าง role ใหม่มากมาย
+        </div>
+      </div>
+    </details>
+    <details>
+      <summary>ReBAC — Relationship-Based Access Control</summary>
+      <div class="db">
+        <p>สิทธิ์ขึ้นกับ <strong>ความสัมพันธ์</strong> ระหว่าง user กับ resource</p>
+        <div class="analogy">
+          <strong>Google Docs คือตัวอย่างคลาสสิก:</strong> ไฟล์เดียวกัน คน A เป็น Owner (แก้ได้/ลบได้/share ได้), คน B เป็น Editor (แก้ได้), คน C เป็น Viewer (ดูได้อย่างเดียว) — สิทธิ์ขึ้นกับ relationship ของแต่ละคนกับไฟล์นั้น ไม่ใช่ global role
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="teach-block">
+    <h3>JWT — JSON Web Token</h3>
+    <p>วิธี authentication ที่นิยมที่สุดใน REST API — token ที่มีข้อมูลอยู่ในตัวเอง</p>
+    <div class="analogy">
+      <strong>เปรียบกับบัตรพนักงาน:</strong> บัตรพนักงานมีชื่อ, รูป, แผนก อยู่ในตัว — เมื่อเข้าห้อง security scan บัตร ไม่ต้องโทรถาม HR ว่าคนนี้คือใคร ทำงานที่ไหน JWT ก็เช่นกัน — server verify ได้เองโดยไม่ต้องเปิด database
+    </div>
+    <details open>
+      <summary>JWT Structure — 3 ส่วนคั่นด้วย "."</summary>
+      <div class="db">
+        <div class="flow">
+          <div class="fb a">Header</div><div class="fa">.</div>
+          <div class="fb a">Payload</div><div class="fa">.</div>
+          <div class="fb a">Signature</div>
+        </div>
+        <p style="font-size:.85rem;color:var(--dim);margin:10px 0">แต่ละส่วน encode ด้วย <strong>base64url</strong> (ไม่ใช่ encryption! ใครๆ ก็ decode ได้)</p>
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-json">// Header — บอกว่าใช้ algorithm อะไร
 {
-  "sub": "12345",         // subject (user id)
+  "alg": "HS256",    // HMAC-SHA256
+  "typ": "JWT"
+}
+
+// Payload — ข้อมูล user (Claims)
+{
+  "sub": "12345",          // subject = user id
   "name": "Alice",
   "role": "student",
-  "iat": 1715598000,      // issued at (Unix timestamp)
-  "exp": 1715684400       // expiry
-}</code></pre>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">JWT Lifecycle</div>
-            <div class="flow" style="flex-direction:column;align-items:flex-start;gap:6px">
-              <div style="display:flex;align-items:center;gap:8px"><div class="flow-box">1</div><span style="font-size:.83rem;color:var(--dim)">User login → Server ออก JWT</span></div>
-              <div style="display:flex;align-items:center;gap:8px"><div class="flow-box">2</div><span style="font-size:.83rem;color:var(--dim)">Client เก็บใน localStorage / cookie</span></div>
-              <div style="display:flex;align-items:center;gap:8px"><div class="flow-box">3</div><span style="font-size:.83rem;color:var(--dim)">ทุก request: <code>Authorization: Bearer &lt;token&gt;</code></span></div>
-              <div style="display:flex;align-items:center;gap:8px"><div class="flow-box">4</div><span style="font-size:.83rem;color:var(--dim)">Server verify signature — ไม่ต้องเปิด DB</span></div>
-              <div style="display:flex;align-items:center;gap:8px"><div class="flow-box">5</div><span style="font-size:.83rem;color:var(--dim)">Token หมดอายุ → refresh หรือ login ใหม่</span></div>
-            </div>
-          </div>
+  "iat": 1715598000,       // issued at (Unix timestamp)
+  "exp": 1715684400        // expiry — หมดอายุเมื่อไหร่
+}
+
+// Signature — ป้องกันการปลอมแปลง
+HMACSHA256(
+  base64url(header) + "." + base64url(payload),
+  SECRET_KEY           // server รู้แค่คนเดียว
+)</code></pre>
+        </div>
+        <div class="warn">
+          <strong>สำคัญ:</strong> Payload ไม่ถูก encrypt — ใครก็ decode ได้ ดังนั้น <strong>อย่าใส่ข้อมูลลับ</strong> (password, credit card) ลงใน JWT! ความปลอดภัยมาจาก Signature ที่ verify ว่า token ไม่ถูกแก้ไข
         </div>
       </div>
     </details>
-
     <details>
-      <summary>OAuth 2.0 — Authorization Code Flow</summary>
-      <div class="details-body">
-        <div class="flow" style="flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:14px">
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <div class="flow-box accent">User</div><div class="flow-arr">→</div>
-            <div class="flow-box">Client App</div><div class="flow-arr">→</div>
-            <div class="flow-box">Authorization Server</div>
-            <span style="font-size:.8rem;color:var(--dim)">(ขอ permission)</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <div class="flow-box">Authorization Server</div><div class="flow-arr">→</div>
-            <div class="flow-box">Redirect + Authorization Code</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <div class="flow-box">Client App</div><div class="flow-arr">→</div>
-            <div class="flow-box accent">Exchange Code → Access Token</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <div class="flow-box">Client ใช้ Access Token</div><div class="flow-arr">→</div>
-            <div class="flow-box">Resource Server</div>
-          </div>
+      <summary>JWT Lifecycle — ใช้งานยังไง?</summary>
+      <div class="db">
+        <div class="steps">
+          <div class="step"><p>User ส่ง username + password มาที่ <code>POST /login</code></p></div>
+          <div class="step"><p>Server ตรวจสอบ ถ้าถูกต้อง สร้าง JWT แล้วส่งกลับ</p></div>
+          <div class="step"><p>Client เก็บ JWT ไว้ (localStorage หรือ httpOnly cookie)</p></div>
+          <div class="step"><p>ทุก request ที่ต้องการ auth ส่ง JWT ใน header: <code>Authorization: Bearer &lt;token&gt;</code></p></div>
+          <div class="step"><p>Server verify signature — ถ้าผ่านก็รู้ว่าเป็นใคร มีสิทธิ์อะไร โดยไม่เปิด DB</p></div>
+          <div class="step"><p>Token หมดอายุ (<code>exp</code> ผ่านไป) → ต้อง refresh หรือ login ใหม่</p></div>
         </div>
-        <div class="tbl-wrap">
+      </div>
+    </details>
+  </div>
+
+  <div class="teach-block">
+    <h3>OAuth 2.0 — "ให้สิทธิ์เฉพาะบางส่วน"</h3>
+    <div class="analogy">
+      <strong>เปรียบกับ:</strong> แทนที่จะให้กุญแจบ้านทั้งดอกกับแม่บ้าน คุณออก "บัตรเข้าห้องโดยเฉพาะ" ที่เข้าได้แค่ห้องนั่งเล่น ไม่ได้ห้องนอน — OAuth ทำแบบเดียวกัน ให้ access token ที่มีสิทธิ์เฉพาะที่ต้องการ ไม่ต้องแชร์ password จริง
+    </div>
+    <details open>
+      <summary>Authorization Code Flow — ขั้นตอนหลัก</summary>
+      <div class="db">
+        <div class="steps">
+          <div class="step"><p>User กด "Login with Google" ใน App ของเรา</p></div>
+          <div class="step"><p>App redirect ไปหน้า Google Login พร้อม <code>client_id</code> และ <code>scope</code> ที่ต้องการ</p></div>
+          <div class="step"><p>User login ที่ Google แล้ว Google ถาม "App นี้ต้องการเข้าถึง Email ของคุณ อนุญาตไหม?"</p></div>
+          <div class="step"><p>User อนุญาต → Google redirect กลับมาพร้อม <strong>Authorization Code</strong></p></div>
+          <div class="step"><p>App ส่ง code ไปแลก <strong>Access Token</strong> กับ Google (server-to-server)</p></div>
+          <div class="step"><p>App ใช้ Access Token เรียก Google API ได้ ภายใน scope ที่ขอ</p></div>
+        </div>
+        <div class="tw" style="margin-top:14px">
           <table>
-            <thead><tr><th>Role</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr></thead>
+            <thead><tr><th>Role</th><th>คืออะไร</th><th>ตัวอย่าง</th></tr></thead>
             <tbody>
-              <tr><td>Resource Owner</td><td>ผู้ใช้ที่เป็นเจ้าของข้อมูล</td><td>คุณ</td></tr>
-              <tr><td>Client</td><td>App ที่ต้องการเข้าถึงข้อมูล</td><td>Third-party app</td></tr>
-              <tr><td>Authorization Server</td><td>ออก token</td><td>Google, Keycloak</td></tr>
-              <tr><td>Resource Server</td><td>API ที่เก็บข้อมูล</td><td>Google Drive API</td></tr>
+              <tr><td>Resource Owner</td><td>เจ้าของข้อมูล</td><td>คุณ (user)</td></tr>
+              <tr><td>Client</td><td>App ที่ต้องการข้อมูล</td><td>App บริษัทอื่น</td></tr>
+              <tr><td>Authorization Server</td><td>ออก token</td><td>Google, Keycloak, Auth0</td></tr>
+              <tr><td>Resource Server</td><td>API ที่เก็บข้อมูล</td><td>Google Calendar API</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </details>
+  </div>
 
-    <details>
-      <summary>Spring Boot Annotations</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-java">@SpringBootApplication          // Entry point + auto-config
-@RestController                 // Combine @Controller + @ResponseBody
-@GetMapping("/students")        // Map HTTP GET → method
-@PostMapping("/students")       // Map HTTP POST → method
-@PutMapping("/students/{id}")
-@DeleteMapping("/students/{id}")
+  <div class="teach-block">
+    <h3>Spring Boot — Framework สำหรับ Java REST API</h3>
+    <p>Spring Boot คือ framework ที่ทำให้สร้าง Java REST API ง่ายมาก — Auto-configure ทุกอย่าง แค่ใส่ annotation แล้วรัน</p>
+    <details open>
+      <summary>Annotations สำคัญ — ต้องจำให้ได้</summary>
+      <div class="db">
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-java">// Application layer
+@SpringBootApplication   // จุด entry point รวม @Configuration + @EnableAutoConfiguration + @ComponentScan
 
-// Parameter binding
-@PathVariable Long id           // /students/{id}
-@RequestParam String year       // /students?year=3
-@RequestBody StudentDto body    // JSON body → object
+// Controller layer (รับ HTTP request)
+@RestController          // = @Controller + @ResponseBody (return object → JSON อัตโนมัติ)
+@GetMapping("/students")          // Map HTTP GET /students → method นี้
+@PostMapping("/students")         // Map HTTP POST /students
+@PutMapping("/students/{id}")     // Map HTTP PUT /students/{id}
+@PatchMapping("/students/{id}")   // Map HTTP PATCH
+@DeleteMapping("/students/{id}")  // Map HTTP DELETE
 
-// Layers
-@Service                        // Business logic layer
-@Repository                     // Data access layer
-@Component                      // Generic bean
+// รับ parameters
+@PathVariable Long id       // ดึงค่าจาก /students/{id} → id
+@RequestParam String year   // ดึงค่าจาก /students?year=3 → year
+@RequestBody StudentDto dto // แปลง JSON body → Java object อัตโนมัติ
+
+// Architecture layers
+@Service       // Business logic layer — ใส่ business rules ที่นี่
+@Repository    // Data access layer — ติดต่อ database
+@Component     // Generic bean (ไม่ระบุ layer)
 
 // Dependency Injection
-@Autowired                      // Inject dependency (field/constructor)</code></pre>
+@Autowired     // ให้ Spring inject dependency อัตโนมัติ</code></pre>
         </div>
-        <div class="cards" style="margin-top:12px">
-          <div class="card">
-            <div class="card-title">Spring Boot Starters</div>
-            <ul>
-              <li><code>spring-boot-starter-web</code> — REST API</li>
-              <li><code>spring-boot-starter-data-jpa</code> — Database (ORM)</li>
-              <li><code>spring-boot-starter-security</code> — Auth</li>
-              <li><code>spring-boot-starter-validation</code> — Bean validation</li>
-              <li><code>spring-boot-starter-test</code> — Testing</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </details>
-  </section>
-
-  <!-- ═══════════════════ L5 ═══════════════════ -->
-  <section class="lesson" id="l5" style="--lesson-color:var(--c5)">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#fff">L5</div>
-      <div><div class="lesson-title">Error Handling &amp; Resilience</div></div>
-      <span class="lesson-tag">Week 5</span>
-    </div>
-
-    <details open>
-      <summary>6 Error Categories</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
+        <div class="tw" style="margin-top:12px">
           <table>
-            <thead><tr><th>Category</th><th>ตัวอย่าง</th><th>HTTP Code</th></tr></thead>
+            <thead><tr><th>Annotation</th><th>Layer</th><th>หน้าที่</th></tr></thead>
             <tbody>
-              <tr><td><strong style="color:var(--c5)">Validation</strong></td><td>Missing field, wrong format, invalid email</td><td><span class="badge b4xx">400</span></td></tr>
-              <tr><td><strong style="color:var(--c5)">Authentication</strong></td><td>Invalid token, expired JWT, wrong password</td><td><span class="badge b4xx">401</span></td></tr>
-              <tr><td><strong style="color:var(--c5)">Authorization</strong></td><td>No permission to access resource</td><td><span class="badge b4xx">403</span></td></tr>
-              <tr><td><strong style="color:var(--c5)">Business Logic</strong></td><td>Insufficient balance, duplicate entry</td><td><span class="badge b4xx">422</span></td></tr>
-              <tr><td><strong style="color:var(--c5)">System</strong></td><td>NullPointerException, out of memory</td><td><span class="badge b5xx">500</span></td></tr>
-              <tr><td><strong style="color:var(--c5)">External Service</strong></td><td>Payment gateway down, DB unreachable</td><td><span class="badge b5xx">502</span><span class="badge b5xx">503</span></td></tr>
+              <tr><td><code>@RestController</code></td><td>Controller</td><td>รับ HTTP request, ส่ง JSON response</td></tr>
+              <tr><td><code>@Service</code></td><td>Service</td><td>Business logic, validation</td></tr>
+              <tr><td><code>@Repository</code></td><td>Repository</td><td>CRUD กับ database</td></tr>
+              <tr><td><code>@Autowired</code></td><td>ทุก layer</td><td>Inject dependency โดยไม่ต้อง new</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </details>
-
     <details>
-      <summary>Structured Error Response</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-json">{
+      <summary>Spring Boot Starters — bundle dependencies</summary>
+      <div class="db">
+        <div class="tw">
+          <table>
+            <thead><tr><th>Starter</th><th>ใช้สำหรับ</th><th>ประกอบด้วย</th></tr></thead>
+            <tbody>
+              <tr><td><code>spring-boot-starter-web</code></td><td>REST API</td><td>Spring MVC, Tomcat, Jackson</td></tr>
+              <tr><td><code>spring-boot-starter-data-jpa</code></td><td>Database ORM</td><td>Hibernate, JPA</td></tr>
+              <tr><td><code>spring-boot-starter-security</code></td><td>Authentication/Authorization</td><td>Spring Security</td></tr>
+              <tr><td><code>spring-boot-starter-validation</code></td><td>Input validation</td><td>Hibernate Validator</td></tr>
+              <tr><td><code>spring-boot-starter-test</code></td><td>Testing</td><td>JUnit 5, Mockito</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+    <div class="exam">
+      <div class="et">📝 ข้อสอบมักถาม</div>
+      <ul>
+        <li>AuthN ก่อน AuthZ เสมอ — ไม่รู้ว่าคุณคือใครจะ authorize ไม่ได้</li>
+        <li>JWT Payload ไม่ถูก encrypt — อย่าใส่ข้อมูลลับ</li>
+        <li>OAuth 2.0 = Authorization framework ไม่ใช่ Authentication (OpenID Connect ถึงเป็น AuthN)</li>
+        <li><code>@RestController</code> = <code>@Controller</code> + <code>@ResponseBody</code></li>
+        <li>Stateless server ควรใช้ JWT (ไม่ต้องเก็บ session)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     L5 — ERROR HANDLING & RESILIENCE
+══════════════════════════════════════════════ -->
+<section class="lesson" id="l5" style="--lc:var(--c5)">
+  <div class="lhead">
+    <div class="lnum" style="color:#fff">L5</div>
+    <div><div class="ltitle">Error Handling &amp; Resilience</div></div>
+    <span class="ltag">Week 5</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>ทำไมต้องจัดการ Error?</h3>
+    <p>ระบบ real-world ไม่มีทางสมบูรณ์ 100% ถ้าไม่จัดการ error ดีๆ จะเกิด 2 ปัญหาใหญ่: <strong>UX แย่</strong> (user ไม่รู้ว่าเกิดอะไร) และ <strong>debug ยาก</strong> (developer ไม่รู้ว่า error เกิดที่ไหน) Error ที่ดีควรบอก: เกิดอะไร, เกิดที่ไหน, แก้ยังไง</p>
+  </div>
+
+  <div class="teach-block">
+    <h3>6 หมวด Error</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>หมวด</th><th>ความหมาย</th><th>ตัวอย่าง</th><th>HTTP Code</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--c5)">Validation</strong></td><td>ข้อมูลที่ส่งมาผิด format หรือขาด field</td><td>email ผิด format, missing required field</td><td><span class="b b4">400</span></td></tr>
+          <tr><td><strong style="color:var(--c5)">Authentication</strong></td><td>ยืนยันตัวตนไม่ผ่าน</td><td>token ผิด, JWT หมดอายุ, password ผิด</td><td><span class="b b4">401</span></td></tr>
+          <tr><td><strong style="color:var(--c5)">Authorization</strong></td><td>ไม่มีสิทธิ์เข้าถึง</td><td>user ธรรมดาเข้า admin endpoint</td><td><span class="b b4">403</span></td></tr>
+          <tr><td><strong style="color:var(--c5)">Business Logic</strong></td><td>Format ถูกแต่ business rule ไม่ผ่าน</td><td>ยอดเงินไม่พอ, สินค้าหมด, email ซ้ำ</td><td><span class="b b4">422</span></td></tr>
+          <tr><td><strong style="color:var(--c5)">System</strong></td><td>Bug ใน code หรือ resource หมด</td><td>NullPointerException, OutOfMemory</td><td><span class="b b5">500</span></td></tr>
+          <tr><td><strong style="color:var(--c5)">External Service</strong></td><td>Service ภายนอกมีปัญหา</td><td>Payment gateway down, DB ไม่ตอบ</td><td><span class="b b5">502</span><span class="b b5">503</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Structured Error Response — format ที่ดี</h3>
+    <p>Response error ที่ดีต้องมีข้อมูลพอให้ client แสดงผล และ developer debug ได้:</p>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-json">{
   "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid email format",
-    "field": "email",
+    "code": "VALIDATION_ERROR",       // รหัสที่ client ใช้ handle ได้
+    "message": "Invalid email format", // อ่านรู้เรื่อง
+    "field": "email",                  // บอกว่า field ไหนผิด
     "timestamp": "2026-05-13T10:00:00Z",
-    "traceId": "abc-123-xyz",
-    "details": [
-      { "field": "email", "issue": "must be a valid email" }
+    "traceId": "req-abc-123",          // ใช้ trace ใน logs
+    "details": [                       // รายละเอียดเพิ่มเติม
+      {
+        "field": "email",
+        "issue": "must be valid email format",
+        "provided": "not-an-email"
+      }
     ]
   }
 }</code></pre>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>Middleware Architecture</summary>
-      <div class="details-body">
-        <div class="flow" style="flex-wrap:wrap;gap:6px;margin-bottom:12px">
-          <div class="flow-box" style="font-size:.8rem">Request</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box accent" style="font-size:.8rem">Auth Middleware</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box accent" style="font-size:.8rem">Logging Middleware</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box accent" style="font-size:.8rem">Validation Middleware</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box" style="font-size:.8rem">Handler</div>
-        </div>
-        <div class="flow" style="flex-wrap:wrap;gap:6px">
-          <div class="flow-box" style="font-size:.8rem">Response</div>
-          <div class="flow-arr">←</div>
-          <div class="flow-box accent" style="font-size:.8rem;background:rgba(248,113,113,.15);border-color:var(--c5);color:var(--c5)">Error Handler</div>
-          <div class="flow-arr">←</div>
-          <div class="flow-box accent" style="font-size:.8rem">Logging</div>
-          <div class="flow-arr">←</div>
-          <div class="flow-box" style="font-size:.8rem">Handler</div>
-        </div>
-        <p style="font-size:.82rem;color:var(--muted);margin-top:10px">Middleware = interceptor รัน before/after handler ใช้ chain pattern</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>Timeout &amp; Retry (Exponential Backoff + Jitter)</summary>
-      <div class="details-body">
-        <div class="cards" style="margin-top:8px">
-          <div class="card">
-            <div class="card-title">Timeout</div>
-            <p>กำหนดเวลาสูงสุดรอ response — ถ้าเกิน fail fast แทนรอไม่รู้จบ ต้องตั้งกับทุก external call</p>
-          </div>
-          <div class="card">
-            <div class="card-title">Retry + Exponential Backoff</div>
-            <div class="code-wrap" style="margin-top:8px">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-plaintext">attempt 1: wait 1s
-attempt 2: wait 2s
-attempt 3: wait 4s
-attempt 4: wait 8s
-+ random jitter (แต่ละ attempt)</code></pre>
-            </div>
-            <p style="font-size:.82rem;color:var(--muted);margin-top:8px">Jitter = ป้องกัน thundering herd (ทุก client retry พร้อมกัน)<br>ใช้กับ transient errors เท่านั้น — ห้าม retry validation errors</p>
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>Circuit Breaker — 3 States</summary>
-      <div class="details-body">
-        <div class="states">
-          <div class="state-box state-closed">
-            <div class="state-label">🟢 Closed</div>
-            <div class="state-desc">Traffic ผ่านปกติ — นับ failures ต่อเนื่อง ถ้าเกิน threshold → เปิด Open</div>
-          </div>
-          <div class="state-box state-open">
-            <div class="state-label">🔴 Open</div>
-            <div class="state-desc">Block ทุก request ทันที (fast fail) ไม่ส่งไปที่ service — รอ timeout แล้วไป Half-Open</div>
-          </div>
-          <div class="state-box state-half">
-            <div class="state-label">🟡 Half-Open</div>
-            <div class="state-desc">ปล่อย 1 request ทดสอบ — สำเร็จ → Closed, ล้มเหลว → กลับ Open</div>
-          </div>
-        </div>
-        <div class="flow" style="margin-top:12px;flex-wrap:wrap">
-          <div class="flow-box" style="color:#34d399">Closed</div>
-          <div class="flow-arr">──failure threshold──→</div>
-          <div class="flow-box" style="color:#f87171">Open</div>
-          <div class="flow-arr">──timeout──→</div>
-          <div class="flow-box" style="color:#fbbf24">Half-Open</div>
-          <div class="flow-arr">──success──→</div>
-          <div class="flow-box" style="color:#34d399">Closed</div>
-        </div>
-      </div>
-    </details>
-  </section>
-
-  <!-- ═══════════════════ L6 ═══════════════════ -->
-  <section class="lesson" id="l6" style="--lesson-color:var(--c6)">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#000">L6</div>
-      <div><div class="lesson-title">API Gateway &amp; Rate Limiting</div></div>
-      <span class="lesson-tag">Week 6</span>
     </div>
+  </div>
 
-    <div class="card full-width" style="margin-bottom:16px">
-      <div class="card-title">API Gateway คืออะไร</div>
-      <p>Single entry point สำหรับ microservices ทั้งหมด — client ไม่ต้องรู้ว่า service อยู่ที่ไหน</p>
-      <div class="flow" style="margin-top:12px;flex-wrap:wrap">
-        <div class="flow-box accent">Client</div>
-        <div class="flow-arr">→</div>
-        <div class="flow-box accent" style="background:rgba(96,165,250,.2);border-color:var(--c6);color:var(--c6)">API Gateway</div>
-        <div class="flow-arr">→</div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <div class="flow-box">Student Service</div>
-          <div class="flow-box">Course Service</div>
-          <div class="flow-box">Auth Service</div>
-        </div>
-      </div>
+  <div class="teach-block">
+    <h3>Middleware Architecture</h3>
+    <p>Middleware คือ code ที่รัน <strong>ก่อน</strong> หรือ <strong>หลัง</strong> handler หลัก ใช้ chain pattern — request ผ่าน middleware แต่ละตัวตามลำดับ</p>
+    <div class="flow" style="flex-wrap:wrap;gap:6px">
+      <div class="fb" style="font-size:.8rem">Request</div><div class="fa">→</div>
+      <div class="fb a" style="font-size:.8rem">Auth Middleware</div><div class="fa">→</div>
+      <div class="fb a" style="font-size:.8rem">Logging</div><div class="fa">→</div>
+      <div class="fb a" style="font-size:.8rem">Validation</div><div class="fa">→</div>
+      <div class="fb" style="font-size:.8rem">Handler</div>
     </div>
+    <div class="flow" style="flex-wrap:wrap;gap:6px;margin-top:6px">
+      <div class="fb" style="font-size:.8rem">Response</div><div class="fa">←</div>
+      <div class="fb a" style="font-size:.8rem;border-color:var(--c5);color:var(--c5)">Error Handler</div><div class="fa">←</div>
+      <div class="fb a" style="font-size:.8rem">Logging</div><div class="fa">←</div>
+      <div class="fb" style="font-size:.8rem">Handler</div>
+    </div>
+    <div class="why" style="margin-top:10px">
+      <strong>ทำไมใช้ Middleware?</strong> แทนที่จะ copy-paste code authentication ทุก handler → ทำครั้งเดียวใน middleware ทุก handler ก็ได้รับ benefit — DRY principle
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Resilience Patterns — ทำให้ระบบทนทาน</h3>
 
     <details open>
-      <summary>8 ความรับผิดชอบของ API Gateway</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
+      <summary>Timeout — ไม่รอตลอดไป</summary>
+      <div class="db">
+        <p>กำหนดเวลาสูงสุดที่จะรอ response — ถ้าเกิน fail fast แทนรอจนระบบค้าง</p>
+        <div class="analogy">
+          <strong>เปรียบกับ:</strong> โทรหาเพื่อน ถ้ารอสาย 30 วินาทีแล้วไม่รับ วางสาย ไม่ใช่รอทั้งวัน — timeout ทำแบบเดียวกัน
+        </div>
+        <div class="warn">
+          <strong>ต้องตั้ง timeout ทุก external call</strong> — ถ้า downstream service ช้าและไม่มี timeout ทุก request จะค้างรอ thread จะหมด ระบบทั้งหมดพัง
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Retry + Exponential Backoff + Jitter</summary>
+      <div class="db">
+        <p>เมื่อ request ล้มเหลว ลองใหม่ — แต่รอนานขึ้นทุกครั้ง + สุ่มเวลาเล็กน้อย</p>
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-plaintext">attempt 1: ล้มเหลว → รอ 1s + jitter (0.8-1.2s)
+attempt 2: ล้มเหลว → รอ 2s + jitter
+attempt 3: ล้มเหลว → รอ 4s + jitter
+attempt 4: ล้มเหลว → รอ 8s + jitter
+attempt 5: ยังล้มเหลว → return error</code></pre>
+        </div>
+        <div class="why">
+          <strong>ทำไมต้องมี Jitter (สุ่มเวลา)?</strong> ถ้าไม่มี jitter และมี client 1,000 ตัว retry พร้อมกันหลัง 2 วินาที server จะโดน 1,000 requests พร้อมกัน = Thundering Herd Problem — jitter กระจาย requests ออกไป
+        </div>
+        <div class="warn">
+          <strong>ใช้ retry เฉพาะ transient errors เท่านั้น</strong> เช่น network timeout, 503 — ห้าม retry: 400 (ส่งข้อมูลผิด retry ก็ยังผิด), 401, 403, 422
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Circuit Breaker — "สะพานไฟ" ป้องกันระบบพัง</summary>
+      <div class="db">
+        <div class="analogy">
+          <strong>เปรียบกับสะพานไฟ (Circuit Breaker) ในบ้าน:</strong> ถ้ากระแสไฟเกิน สะพานไฟตัด (open) ป้องกันไฟไหม้ หลังจากระยะเวลาหนึ่งลองต่อใหม่ (half-open) ถ้าปกติก็กลับมาใช้งาน (closed) ได้
+        </div>
+        <div class="states">
+          <div class="sbox sc">
+            <div class="sl">🟢 CLOSED</div>
+            <div class="sd">ทำงานปกติ — นับ failures ทุก request ถ้า failures เกิน threshold → เปิด OPEN</div>
+          </div>
+          <div class="sbox so">
+            <div class="sl">🔴 OPEN</div>
+            <div class="sd">Block ทุก request ทันที ไม่ส่งไปที่ downstream service — fast fail ทันที รอ timeout แล้วไป HALF-OPEN</div>
+          </div>
+          <div class="sbox sh">
+            <div class="sl">🟡 HALF-OPEN</div>
+            <div class="sd">ปล่อย request จำนวนน้อยผ่านทดสอบ — ถ้าสำเร็จ → กลับ CLOSED, ถ้าล้มเหลว → กลับ OPEN</div>
+          </div>
+        </div>
+        <div class="why" style="margin-top:12px">
+          <strong>ทำไมต้องมี Circuit Breaker?</strong> ถ้า service A เรียก service B ที่ช้ามาก ทุก request ของ A จะรอนาน threads หมด A พัง — circuit breaker ป้องกัน cascade failure ด้วยการ fail fast แทน
+        </div>
+        <div class="flow" style="flex-wrap:wrap;gap:6px;margin-top:12px">
+          <div class="fb" style="color:#34d399">CLOSED</div>
+          <div class="fa">──failures exceed threshold──→</div>
+          <div class="fb" style="color:#f87171">OPEN</div>
+          <div class="fa">──timeout──→</div>
+          <div class="fb" style="color:#fbbf24">HALF-OPEN</div>
+          <div class="fa">──success──→</div>
+          <div class="fb" style="color:#34d399">CLOSED</div>
+        </div>
+      </div>
+    </details>
+    <div class="exam">
+      <div class="et">📝 ข้อสอบมักถาม</div>
+      <ul>
+        <li>Circuit Breaker OPEN = fast fail ทันที (ไม่ส่งไปที่ service จริง)</li>
+        <li>Jitter ใน retry = ป้องกัน Thundering Herd</li>
+        <li>Retry ห้ามใช้กับ 4xx errors (client error — retry ก็ไม่ help)</li>
+        <li>Middleware ใช้ chain pattern — รันตามลำดับ</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     L6 — API GATEWAY & RATE LIMITING
+══════════════════════════════════════════════ -->
+<section class="lesson" id="l6" style="--lc:var(--c6)">
+  <div class="lhead">
+    <div class="lnum" style="color:#000">L6</div>
+    <div><div class="ltitle">API Gateway &amp; Rate Limiting</div></div>
+    <span class="ltag">Week 6</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>ปัญหาก่อนมี API Gateway</h3>
+    <p>ลองนึกภาพ microservices 20 ตัว ถ้า client ต้องต่อกับแต่ละ service โดยตรง:</p>
+    <ul style="padding-left:20px;margin:10px 0">
+      <li>Client ต้องรู้ IP/URL ของทุก service</li>
+      <li>Authentication ต้องทำซ้ำทุก service</li>
+      <li>เปลี่ยน URL service = ต้องแจ้ง client ทุกคน</li>
+      <li>Rate limiting ต้องทำทุก service</li>
+      <li>Logging กระจัดกระจาย</li>
+    </ul>
+    <div class="analogy">
+      <strong>API Gateway แก้ปัญหานี้เหมือน:</strong> เคาน์เตอร์ต้อนรับของบริษัทใหญ่ — แทนที่ผู้มาติดต่อจะเดินวนหาแต่ละแผนกเอง ไปหาเคาน์เตอร์กลางจุดเดียว พนักงานต้อนรับจัดการทุกอย่างให้ ส่งต่อไปยังแผนกที่ถูกต้อง
+    </div>
+    <div class="flow" style="flex-wrap:wrap;gap:8px;margin-top:12px">
+      <div class="fb a">Client</div><div class="fa">→</div>
+      <div class="fb a" style="border-color:var(--c6);color:var(--c6);font-weight:700">API Gateway</div>
+      <div class="fa">→</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="fb" style="font-size:.8rem">Student Service :3001</div>
+        <div class="fb" style="font-size:.8rem">Course Service :3002</div>
+        <div class="fb" style="font-size:.8rem">Auth Service :3003</div>
+        <div class="fb" style="font-size:.8rem">Payment Service :3004</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>8 หน้าที่ของ API Gateway</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>หน้าที่</th><th>รายละเอียด</th><th>ประโยชน์</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong style="color:var(--c6)">Routing</strong></td><td>Map path → service (<code>/api/students</code> → Student Service)</td><td>Client ไม่ต้องรู้ location service</td></tr>
+          <tr><td>2</td><td><strong style="color:var(--c6)">Protocol Translation</strong></td><td>แปลง HTTP → gRPC, REST → WebSocket</td><td>Services ใช้ protocol ต่างกันได้</td></tr>
+          <tr><td>3</td><td><strong style="color:var(--c6)">Security Offloading</strong></td><td>Verify JWT ที่ gateway ไม่ต้องทุก service</td><td>ลด duplicate code</td></tr>
+          <tr><td>4</td><td><strong style="color:var(--c6)">Payload Transformation</strong></td><td>แปลง request/response format ระหว่าง client กับ service</td><td>Decouple client จาก service format</td></tr>
+          <tr><td>5</td><td><strong style="color:var(--c6)">Load Balancing</strong></td><td>กระจาย traffic ไปหลาย instances</td><td>High availability</td></tr>
+          <tr><td>6</td><td><strong style="color:var(--c6)">Rate Limiting</strong></td><td>จำกัด requests ต่อ client/IP</td><td>ป้องกัน abuse</td></tr>
+          <tr><td>7</td><td><strong style="color:var(--c6)">Caching</strong></td><td>Cache response ที่ gateway ลด load backend</td><td>ตอบเร็วขึ้น ประหยัด resource</td></tr>
+          <tr><td>8</td><td><strong style="color:var(--c6)">Observability</strong></td><td>Centralized logging, metrics, distributed tracing</td><td>Debug ง่าย เห็นภาพรวม</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Rate Limiting — ทำไมต้องมี?</h3>
+    <p>ถ้าไม่มี rate limiting ใครก็สามารถส่ง request ล้านครั้ง/วินาที ทำให้ server พัง (DoS) หรือ scrape ข้อมูลทั้งหมดได้ Rate limiting จำกัดว่า client หนึ่งรายส่งได้กี่ request ใน timeframe</p>
+
+    <details open>
+      <summary>Token Bucket Algorithm</summary>
+      <div class="db">
+        <div class="analogy">
+          <strong>เปรียบกับ:</strong> bucket มี tokens — ทุก T วินาที เติม tokens เข้า bucket (สูงสุดเท่ากับ capacity) แต่ละ request ใช้ 1 token ถ้า bucket ว่าง → ปฏิเสธ request
+        </div>
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-plaintext">Capacity: 10 tokens
+Refill rate: 2 tokens/วินาที
+
+10:00:00 — bucket เต็ม (10 tokens)
+10:00:00 — ส่ง 5 requests → เหลือ 5 tokens ✓
+10:00:01 — เติม 2 tokens → 7 tokens
+10:00:01 — ส่ง 10 requests → ใช้ได้ 7 (มีแค่ 7) → 3 ถูก reject ✗</code></pre>
+        </div>
+        <p style="font-size:.88rem;color:var(--dim);margin-top:8px"><strong style="color:var(--text)">จุดเด่น:</strong> อนุญาต burst ได้ — ถ้าไม่ได้ใช้มาสักพัก bucket เต็ม ส่งได้เยอะขึ้นทันที</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Leaky Bucket Algorithm</summary>
+      <div class="db">
+        <div class="analogy">
+          <strong>เปรียบกับ:</strong> ถัง (queue) ที่รับน้ำ (requests) เข้ามา แล้วปล่อยออกในอัตราคงที่ (leak rate) — ถ้าน้ำเต็มถัง น้ำที่เข้าใหม่จะล้น (reject)
+        </div>
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-plaintext">Queue size: 10 requests
+Process rate: 2 requests/วินาที (คงที่เสมอ)
+
+ไม่ว่า client จะส่งมาเร็วแค่ไหน server จะ process แค่ 2/วินาที
+ถ้า queue เต็ม → reject request ใหม่ทันที</code></pre>
+        </div>
+        <p style="font-size:.88rem;color:var(--dim);margin-top:8px"><strong style="color:var(--text)">จุดเด่น:</strong> Output rate สม่ำเสมอมาก ดีสำหรับ protect downstream services จาก traffic spike</p>
+        <div class="tw" style="margin-top:12px">
           <table>
-            <thead><tr><th>#</th><th>หน้าที่</th><th>รายละเอียด</th></tr></thead>
+            <thead><tr><th></th><th>Token Bucket</th><th>Leaky Bucket</th></tr></thead>
             <tbody>
-              <tr><td>1</td><td><strong style="color:var(--c6)">Routing</strong></td><td>Map /api/students → Student Service</td></tr>
-              <tr><td>2</td><td><strong style="color:var(--c6)">Protocol Translation</strong></td><td>HTTP → gRPC, HTTP → WebSocket</td></tr>
-              <tr><td>3</td><td><strong style="color:var(--c6)">Security Offloading</strong></td><td>JWT verify ทำที่ gateway ไม่ต้องทุก service</td></tr>
-              <tr><td>4</td><td><strong style="color:var(--c6)">Payload Transformation</strong></td><td>แปลง request/response format</td></tr>
-              <tr><td>5</td><td><strong style="color:var(--c6)">Load Balancing</strong></td><td>กระจาย traffic หลาย instances</td></tr>
-              <tr><td>6</td><td><strong style="color:var(--c6)">Rate Limiting</strong></td><td>จำกัด requests ต่อ client/IP</td></tr>
-              <tr><td>7</td><td><strong style="color:var(--c6)">Caching</strong></td><td>Cache responses ลด load backend</td></tr>
-              <tr><td>8</td><td><strong style="color:var(--c6)">Observability</strong></td><td>Centralized logging, metrics, distributed tracing</td></tr>
+              <tr><td>Burst allowed?</td><td>✓ ได้ (ถ้า bucket เต็ม)</td><td>✗ ไม่ได้</td></tr>
+              <tr><td>Output rate</td><td>ไม่สม่ำเสมอ</td><td>สม่ำเสมอ</td></tr>
+              <tr><td>เหมาะกับ</td><td>API ที่ยอม burst ได้บ้าง</td><td>ต้องการ smooth traffic</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </details>
 
-    <details open>
-      <summary>Rate Limiting Algorithms</summary>
-      <div class="details-body">
-        <div class="cards" style="margin-top:8px">
-          <div class="card">
-            <div class="card-title">Token Bucket</div>
-            <div class="code-wrap" style="margin-top:8px">
-              <pre><code class="language-plaintext">Bucket จุ N tokens
-ทุก T วินาที เติม tokens ขึ้นมา
-แต่ละ request ใช้ 1 token
-bucket ว่าง → 429 Too Many Requests</code></pre>
-            </div>
-            <ul style="margin-top:8px">
-              <li>✓ อนุญาต <strong>burst</strong> ได้ (ถ้า bucket เต็ม)</li>
-              <li>✓ ยืดหยุ่นกว่า Leaky Bucket</li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="card-title">Leaky Bucket</div>
-            <div class="code-wrap" style="margin-top:8px">
-              <pre><code class="language-plaintext">Request เข้า queue (bucket)
-ประมวลผลในอัตราคงที่ (leak rate)
-queue เต็ม → reject request</code></pre>
-            </div>
-            <ul style="margin-top:8px">
-              <li>✓ Smooth output rate สม่ำเสมอ</li>
-              <li>✗ ไม่มี burst — output rate คงที่เสมอ</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </details>
-
     <details>
-      <summary>HTTP 429 Response Headers</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <summary>HTTP 429 Response</summary>
+      <div class="db">
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
           <pre><code class="language-http">HTTP/1.1 429 Too Many Requests
-Retry-After: 60
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 0
-X-RateLimit-Reset: 1715598060
+Retry-After: 60                    // บอก client รอกี่วินาทีก่อน retry
+X-RateLimit-Limit: 100             // สูงสุดกี่ requests
+X-RateLimit-Remaining: 0           // เหลืออีกกี่ requests
+X-RateLimit-Reset: 1715598060      // Unix timestamp ที่ limit จะ reset
 
 {
   "error": "Rate limit exceeded",
+  "message": "You have exceeded 100 requests per minute",
   "retryAfter": 60
 }</code></pre>
         </div>
       </div>
     </details>
-  </section>
-
-  <!-- ═══════════════════ L7 ═══════════════════ -->
-  <section class="lesson" id="l7" style="--lesson-color:var(--c7)">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#000">L7</div>
-      <div><div class="lesson-title">Containers &amp; Docker</div></div>
-      <span class="lesson-tag">Week 7</span>
+    <div class="exam">
+      <div class="et">📝 ข้อสอบมักถาม</div>
+      <ul>
+        <li>Token Bucket = อนุญาต burst, Leaky Bucket = smooth rate คงที่</li>
+        <li>API Gateway = single entry point — ไม่ใช่แค่ reverse proxy</li>
+        <li>Security offloading = verify JWT ที่ gateway ครั้งเดียว ไม่ต้องทำทุก service</li>
+        <li>HTTP 429 = Too Many Requests (rate limit)</li>
+      </ul>
     </div>
+  </div>
+</section>
 
-    <details open>
-      <summary>VM vs Container</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th></th><th>Virtual Machine (VM)</th><th>Container</th></tr></thead>
-            <tbody>
-              <tr><td>Size</td><td>GB (ต่อ VM)</td><td>MB (ต่อ container)</td></tr>
-              <tr><td>Startup Time</td><td>นาที</td><td>วินาที</td></tr>
-              <tr><td>Isolation</td><td>Full OS isolation</td><td>Process-level (share kernel)</td></tr>
-              <tr><td>Overhead</td><td>สูง (hypervisor + full OS)</td><td>ต่ำ (share host kernel)</td></tr>
-              <tr><td>Portability</td><td>ปานกลาง</td><td>สูงมาก ("runs anywhere")</td></tr>
-              <tr><td>Use case</td><td>Strong isolation ต้องการ full OS</td><td>Microservices, CI/CD, cloud</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
+<!-- ══════════════════════════════════════════════
+     L7 — CONTAINERS & DOCKER
+══════════════════════════════════════════════ -->
+<section class="lesson" id="l7" style="--lc:var(--c7)">
+  <div class="lhead">
+    <div class="lnum" style="color:#000">L7</div>
+    <div><div class="ltitle">Containers &amp; Docker</div></div>
+    <span class="ltag">Week 7</span>
+  </div>
 
-    <details open>
-      <summary>Docker Architecture</summary>
-      <div class="details-body">
-        <div class="flow" style="flex-wrap:wrap;gap:8px;margin-bottom:14px">
-          <div class="flow-box accent">Dockerfile</div>
-          <div class="flow-arr">──docker build──→</div>
-          <div class="flow-box accent">Image</div>
-          <div class="flow-arr">──docker run──→</div>
-          <div class="flow-box accent">Container</div>
-        </div>
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Concept</th><th>คืออะไร</th></tr></thead>
-            <tbody>
-              <tr><td><strong style="color:var(--c7)">Dockerfile</strong></td><td>Recipe / script สำหรับ build image</td></tr>
-              <tr><td><strong style="color:var(--c7)">Image</strong></td><td>Snapshot read-only ของ app + dependencies</td></tr>
-              <tr><td><strong style="color:var(--c7)">Container</strong></td><td>Running instance ของ image</td></tr>
-              <tr><td><strong style="color:var(--c7)">Registry</strong></td><td>เก็บ images (Docker Hub, ECR, GCR)</td></tr>
-              <tr><td><strong style="color:var(--c7)">Docker Engine</strong></td><td>Daemon ที่จัดการ containers บน host</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>Dockerfile Example + Layer Caching</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-dockerfile">FROM node:18                    # Base image (layer 1)
-WORKDIR /app                    # Set working directory
-
-COPY package*.json ./           # Copy deps FIRST (layer caching!)
-RUN npm install                 # Install deps — cached if package.json unchanged
-
-COPY . .                        # Copy source code (changes often)
-EXPOSE 3000                     # Document the port
-CMD ["node", "server.js"]       # Default command when container starts</code></pre>
-        </div>
-        <div class="card" style="margin-top:12px">
-          <div class="card-title">Layer Caching</div>
-          <p>Docker cache แต่ละ instruction เป็น layer — ถ้า layer ไม่เปลี่ยน ไม่ต้อง rebuild ดังนั้น copy <code>package.json</code> ก่อน source code เพื่อให้ <code>npm install</code> ถูก cache (source code เปลี่ยนบ่อยกว่า dependencies)</p>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>Kubernetes (K8s) Key Concepts</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Concept</th><th>คืออะไร</th><th>เปรียบกับ</th></tr></thead>
-            <tbody>
-              <tr><td><strong style="color:var(--c7)">Pod</strong></td><td>หน่วยเล็กสุด — 1+ containers ที่รันด้วยกัน</td><td>VM instance</td></tr>
-              <tr><td><strong style="color:var(--c7)">Deployment</strong></td><td>กำหนด desired state (กี่ replicas, image version)</td><td>Process manager</td></tr>
-              <tr><td><strong style="color:var(--c7)">Service</strong></td><td>Stable network endpoint สำหรับ Pods</td><td>Load balancer DNS</td></tr>
-              <tr><td><strong style="color:var(--c7)">Ingress</strong></td><td>Manage external traffic → Services</td><td>API Gateway / Reverse Proxy</td></tr>
-              <tr><td><strong style="color:var(--c7)">Namespace</strong></td><td>แยก environments (dev/staging/prod)</td><td>Folder/workspace</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-  </section>
-
-  <!-- ═══════════════════ L8 ═══════════════════ -->
-  <section class="lesson" id="l8" style="--lesson-color:var(--c8)">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#000">L8</div>
-      <div><div class="lesson-title">gRPC</div></div>
-      <span class="lesson-tag">Week 8</span>
+  <div class="teach-block">
+    <h3>ปัญหา "Works on my machine"</h3>
+    <p>Developer A พัฒนา app บน macOS ใช้ Node.js 18, Python 3.11 — ส่งให้ server ที่ใช้ Linux + Node.js 16 → app crash Developer B บน Windows ก็เจอ path format ต่างกัน — ปัญหานี้เกิดมาตลอด</p>
+    <div class="why">
+      <strong>Container แก้ปัญหานี้:</strong> แทนที่จะส่งแค่ code ส่ง container ที่มี code + dependencies + OS libraries + config ทั้งหมด รันที่ไหนก็ได้ผลเหมือนกัน "Build once, run anywhere"
     </div>
+    <div class="analogy">
+      <strong>เปรียบกับกล่อง shipping container:</strong> ไม่ว่าจะบรรทุกบนเรือ รถไฟ หรือรถบรรทุก กล่องเหมือนกันหมด เนื้อหาข้างในไม่เปลี่ยน
+    </div>
+  </div>
 
+  <div class="teach-block">
+    <h3>VM vs Container</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th></th><th>Virtual Machine (VM)</th><th>Container</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ขนาด</strong></td><td>GB ต่อ VM (มี full OS)</td><td>MB ต่อ container</td></tr>
+          <tr><td><strong>Startup time</strong></td><td>นาที (boot OS)</td><td>วินาที (start process)</td></tr>
+          <tr><td><strong>Isolation</strong></td><td>Full OS isolation (แข็งแกร่ง)</td><td>Process-level (share kernel)</td></tr>
+          <tr><td><strong>Overhead</strong></td><td>สูง (hypervisor + OS per VM)</td><td>ต่ำ (share host OS kernel)</td></tr>
+          <tr><td><strong>Portability</strong></td><td>ปานกลาง (OS-dependent)</td><td>สูงมาก (runs anywhere)</td></tr>
+          <tr><td><strong>Security</strong></td><td>สูงกว่า (stronger isolation)</td><td>ต่ำกว่า (share kernel)</td></tr>
+          <tr><td><strong>Use case</strong></td><td>ต้องการ full OS, strong isolation</td><td>Microservices, CI/CD, scale fast</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip">
+      <strong>ในโลกจริง:</strong> VM และ Container ใช้ร่วมกัน — รัน containers บน VMs เพื่อได้ทั้ง isolation (VM) และ efficiency (container)
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Docker — เครื่องมือสร้างและรัน Containers</h3>
+    <div class="flow" style="flex-wrap:wrap;gap:8px">
+      <div class="fb a">Dockerfile</div>
+      <div class="fa">──docker build──→</div>
+      <div class="fb a">Image</div>
+      <div class="fa">──docker run──→</div>
+      <div class="fb a">Container</div>
+    </div>
+    <div class="cards" style="margin-top:14px">
+      <div class="card">
+        <h4>Dockerfile</h4>
+        <p>Script / recipe บอกวิธีสร้าง image — เหมือนสูตรอาหาร</p>
+      </div>
+      <div class="card">
+        <h4>Image</h4>
+        <p>Snapshot read-only ของ app + dependencies + config — เหมือนแม่พิมพ์ รันได้หลาย containers จาก image เดียว</p>
+      </div>
+      <div class="card">
+        <h4>Container</h4>
+        <p>Running instance ของ image — เหมือนขนมที่ปั้นจากแม่พิมพ์ มีหลาย container จาก image เดียวได้</p>
+      </div>
+      <div class="card">
+        <h4>Registry</h4>
+        <p>ที่เก็บ images เหมือน GitHub แต่สำหรับ Docker images (Docker Hub, AWS ECR, GCR)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Dockerfile — อธิบายทุกคำสั่ง</h3>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-dockerfile">FROM node:18-alpine          # เริ่มจาก base image (node version 18, alpine=เล็ก)
+                              # alpine Linux ขนาด ~5MB ต่างจาก ubuntu ~100MB
+
+WORKDIR /app                 # กำหนด working directory ใน container
+                              # คำสั่งต่อจากนี้ทำงานใน /app
+
+COPY package*.json ./        # copy package.json และ package-lock.json ก่อน!
+                              # ← สำคัญมาก: ทำเพื่อ Layer Caching
+
+RUN npm install              # ติดตั้ง dependencies
+                              # layer นี้ถูก cache ถ้า package.json ไม่เปลี่ยน
+
+COPY . .                     # copy source code ทั้งหมด
+                              # ทำหลัง npm install เพราะ code เปลี่ยนบ่อย
+                              # ถ้าทำก่อน ทุกครั้งที่แก้ code จะต้อง npm install ใหม่
+
+EXPOSE 3000                  # บอก Docker ว่า container listen port 3000
+                              # แค่ documentation ไม่ได้ publish จริงๆ
+
+CMD ["node", "server.js"]    # คำสั่งที่รันเมื่อ container เริ่มทำงาน
+                              # ถูก override ได้ตอน docker run</code></pre>
+    </div>
+    <details>
+      <summary>Layer Caching — ทำไมต้อง copy package.json ก่อน?</summary>
+      <div class="db">
+        <p>Docker เก็บแต่ละ instruction เป็น <strong>layer</strong> ที่ cache ได้ — ถ้า instruction ไม่เปลี่ยน Docker ใช้ cached layer โดยไม่ต้อง rebuild</p>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Layer</th><th>เปลี่ยนบ่อยแค่ไหน</th><th>ผล</th></tr></thead>
+            <tbody>
+              <tr><td>FROM node:18</td><td>น้อยมาก</td><td>Cache ได้นาน</td></tr>
+              <tr><td>COPY package.json</td><td>ไม่บ่อย (เพิ่ม dependency)</td><td>Cache ได้นานพอสมควร</td></tr>
+              <tr><td>RUN npm install</td><td>แค่เมื่อ package.json เปลี่ยน</td><td>✓ Cache ถ้า package.json ไม่เปลี่ยน</td></tr>
+              <tr><td>COPY . .</td><td>ทุกครั้งที่แก้ code</td><td>ต้อง rebuild เสมอ — แต่ layer ข้างบน cache</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="why">
+          <strong>ถ้า copy source code ก่อน:</strong> ทุกครั้งที่แก้โค้ดแม้แต่บรรทัดเดียว layer COPY . . เปลี่ยน → ทุก layer หลังจากนี้ต้อง rebuild ใหม่ รวมถึง RUN npm install → ช้ามาก
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="teach-block">
+    <h3>Kubernetes — Orchestrator จัดการ Containers</h3>
+    <div class="analogy">
+      <strong>เปรียบกับ:</strong> ถ้า Docker คือการจ้างพนักงาน (container) Kubernetes คือ HR/ผู้จัดการที่คอยดูแลว่า "ต้องมีพนักงาน 3 คนตลอดเวลา — ถ้าคนไหนป่วยให้จ้างใหม่ทันที ถ้า workload เพิ่ม ให้จ้างเพิ่ม"
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Concept</th><th>คืออะไร</th><th>เปรียบกับ</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--c7)">Pod</strong></td><td>หน่วยเล็กสุดที่ deploy ได้ — 1+ containers ที่รันด้วยกัน share network/storage</td><td>กลุ่มพนักงานทำงานเดียวกัน</td></tr>
+          <tr><td><strong style="color:var(--c7)">Deployment</strong></td><td>กำหนด desired state (กี่ replicas, image version, update strategy)</td><td>ใบ JD + จำนวน headcount</td></tr>
+          <tr><td><strong style="color:var(--c7)">Service</strong></td><td>Stable network endpoint สำหรับ Pods — load balance ระหว่าง Pods</td><td>เบอร์โทรหลัก ที่ไม่เปลี่ยนแม้พนักงานเปลี่ยน</td></tr>
+          <tr><td><strong style="color:var(--c7)">Ingress</strong></td><td>จัดการ traffic จากภายนอก → Services ใน cluster</td><td>เคาน์เตอร์ต้อนรับบริษัท</td></tr>
+          <tr><td><strong style="color:var(--c7)">Namespace</strong></td><td>แบ่ง cluster เป็น environments แยกกัน</td><td>แผนกต่างๆ ในบริษัท</td></tr>
+          <tr><td><strong style="color:var(--c7)">HPA</strong></td><td>Horizontal Pod Autoscaler — scale pods ตาม CPU/memory อัตโนมัติ</td><td>จ้างพนักงานชั่วคราวช่วง peak season</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exam">
+      <div class="et">📝 ข้อสอบมักถาม</div>
+      <ul>
+        <li>VM = full OS, Container = share kernel — Container เล็กกว่า เร็วกว่า</li>
+        <li>Layer caching: copy package.json ก่อน source code เพื่อ cache npm install</li>
+        <li>Dockerfile: FROM → WORKDIR → COPY → RUN → EXPOSE → CMD</li>
+        <li>K8s Service = stable endpoint แม้ Pod IP เปลี่ยน</li>
+        <li>Liveness probe ล้มเหลว → K8s restart container</li>
+        <li>Readiness probe ล้มเหลว → K8s หยุดส่ง traffic มา (ไม่ restart)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     L8 — gRPC
+══════════════════════════════════════════════ -->
+<section class="lesson" id="l8" style="--lc:var(--c8)">
+  <div class="lhead">
+    <div class="lnum" style="color:#000">L8</div>
+    <div><div class="ltitle">gRPC</div></div>
+    <span class="ltag">Week 8</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>ปัญหาของ REST ในบาง use case</h3>
+    <p>REST ดีสำหรับ public API แต่ใน microservices internal communication มีข้อเสีย:</p>
+    <ul style="padding-left:20px;margin:8px 0">
+      <li>JSON = text format ขนาดใหญ่ serialize/deserialize ช้า</li>
+      <li>HTTP/1.1 = 1 request ต่อ connection (หรือ HTTP/2 ก็ได้ แต่ REST ไม่บังคับ)</li>
+      <li>ไม่มี built-in streaming</li>
+      <li>ไม่มี strict contract — schema drift ได้</li>
+    </ul>
+    <div class="analogy">
+      <strong>เปรียบ REST กับ gRPC:</strong> REST เหมือนส่ง SMS (ข้อความ readable แต่ใหญ่) — gRPC เหมือนโทรศัพท์ (binary เร็ว, สองทาง, ตรงกว่า)
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>gRPC คืออะไร และทำงานยังไง?</h3>
+    <p><strong>gRPC</strong> (Google Remote Procedure Call) คือ framework สำหรับเรียก function บน server อีกเครื่อง <strong>เหมือนเรียก local function</strong> — ใช้ HTTP/2 เป็น transport และ Protocol Buffers เป็น serialization format</p>
     <div class="cards">
       <div class="card">
-        <div class="card-title">gRPC คืออะไร</div>
-        <p><strong>Google Remote Procedure Call</strong> — เรียก function บน server อีกเครื่องเหมือนเรียก local function สร้างโดย Google ใช้ HTTP/2 + Protocol Buffers</p>
+        <h4>HTTP/2 — Transport Layer</h4>
+        <ul>
+          <li><strong>Multiplexing</strong> — หลาย requests พร้อมกันบน 1 connection</li>
+          <li><strong>Binary protocol</strong> — ไม่ใช่ text เร็วกว่า</li>
+          <li><strong>Header compression</strong> — ลด overhead</li>
+          <li><strong>Server push</strong> — server ส่งข้อมูลโดยไม่รอ request</li>
+        </ul>
       </div>
       <div class="card">
-        <div class="card-title">Technology Stack</div>
+        <h4>Protocol Buffers — Serialization</h4>
         <ul>
-          <li><strong style="color:var(--c8)">HTTP/2</strong> — Multiplexing, binary protocol, header compression, server push</li>
-          <li><strong style="color:var(--c8)">Protocol Buffers (Protobuf)</strong> — Binary serialization ~3-10x เล็กกว่า JSON, เร็วกว่า parse</li>
+          <li>Binary format เล็กกว่า JSON ~3-10x</li>
+          <li>Parse เร็วกว่า JSON มาก</li>
+          <li>Strongly typed — ผิด type compile error ทันที</li>
+          <li>นิยาม schema ใน <code>.proto</code> file แล้ว auto-generate code</li>
         </ul>
       </div>
     </div>
+  </div>
 
-    <details open>
-      <summary>.proto File — ไฟล์นิยาม API</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-protobuf">syntax = "proto3";         // version ของ protobuf
+  <div class="teach-block">
+    <h3>.proto File — สัญญา API ของ gRPC</h3>
+    <p>ก่อนเขียน code ต้องนิยาม interface ใน <code>.proto</code> file — protoc compiler จะ generate code ในภาษาที่ต้องการ (Go, Java, Python, etc.) อัตโนมัติ</p>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-protobuf">syntax = "proto3";          // บังคับ ต้องระบุ version
 
-package student;           // namespace
+package student;            // namespace ป้องกัน name collision
 
-// Service definition — บอกว่ามี RPC อะไรบ้าง
+option go_package = "./studentpb";  // บอกว่า generated Go code ไปอยู่ที่ไหน
+
+// Service = กำหนด RPC methods (เหมือน interface ใน Java/Go)
 service StudentService {
-  rpc GetStudent (StudentRequest) returns (StudentResponse);
-  rpc ListStudents (ListRequest) returns (stream StudentResponse);  // server streaming
-  rpc CreateStudents (stream StudentRequest) returns (StudentResponse);  // client streaming
-  rpc Chat (stream ChatMsg) returns (stream ChatMsg);              // bidirectional
+  rpc GetStudent (StudentRequest) returns (StudentResponse);         // Unary
+  rpc ListStudents (ListRequest) returns (stream StudentResponse);   // Server streaming
+  rpc UploadStudents (stream StudentRequest) returns (Summary);      // Client streaming
+  rpc Chat (stream Message) returns (stream Message);               // Bidirectional
 }
 
-// Message definitions — structure ของ data
+// Message = struct ของ data
 message StudentRequest {
-  int32 id = 1;            // field number (ไม่ใช่ value!)
+  int32 id = 1;              // = 1 คือ field number (ไม่ใช่ value!)
+  optional string name = 2;  // optional field
 }
 
 message StudentResponse {
@@ -1320,433 +1388,276 @@ message StudentResponse {
   string name = 2;
   string major = 3;
   string email = 4;
-}
-
-message ListRequest {
-  string department = 1;
+  // ถ้าเพิ่ม field ใหม่ ต้องใช้ field number ต่อไป (5, 6, ...)
+  // ห้ามเปลี่ยน field number ที่มีอยู่! = breaking change
 }</code></pre>
-        </div>
-        <div class="card" style="margin-top:12px">
-          <div class="card-title">Field Numbers — สำคัญมาก!</div>
-          <p>Protobuf ใช้ <strong>field number</strong> (= 1, = 2) ใน binary encoding ไม่ใช่ field name — ดังนั้น <strong>เปลี่ยน number = breaking change</strong> ที่ทำให้ existing clients อ่าน data ผิด แต่เปลี่ยนชื่อ field ได้ (backward compatible)</p>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>4 Communication Patterns</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Pattern</th><th>Request</th><th>Response</th><th>ตัวอย่าง use case</th></tr></thead>
-            <tbody>
-              <tr><td><strong style="color:var(--c8)">Unary</strong></td><td>1 message</td><td>1 message</td><td>Get student by ID (เหมือน REST)</td></tr>
-              <tr><td><strong style="color:var(--c8)">Server Streaming</strong></td><td>1 message</td><td>stream messages</td><td>Download large list, live updates</td></tr>
-              <tr><td><strong style="color:var(--c8)">Client Streaming</strong></td><td>stream messages</td><td>1 message</td><td>Upload batch data, log aggregation</td></tr>
-              <tr><td><strong style="color:var(--c8)">Bidirectional</strong></td><td>stream messages</td><td>stream messages</td><td>Real-time chat, live collaboration</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>gRPC vs REST</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th></th><th>gRPC</th><th>REST</th></tr></thead>
-            <tbody>
-              <tr><td>Protocol</td><td>HTTP/2</td><td>HTTP/1.1 หรือ 2</td></tr>
-              <tr><td>Format</td><td>Protobuf (binary)</td><td>JSON (text)</td></tr>
-              <tr><td>Contract</td><td>Strict (.proto required)</td><td>Optional (OpenAPI)</td></tr>
-              <tr><td>Browser Support</td><td>จำกัด (ต้องใช้ grpc-web)</td><td>ดีมาก (native)</td></tr>
-              <tr><td>Performance</td><td>สูงกว่า (binary + HTTP/2)</td><td>ปานกลาง</td></tr>
-              <tr><td>Readability</td><td>ต้อง decode (binary)</td><td>Human-readable</td></tr>
-              <tr><td>Code Generation</td><td>Auto-gen จาก .proto ทุกภาษา</td><td>Manual หรือ tool</td></tr>
-              <tr><td>Streaming</td><td>รองรับ native (4 patterns)</td><td>SSE/WebSocket แยกต่างหาก</td></tr>
-              <tr><td>Use case</td><td>Internal microservices</td><td>Public API, browsers</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-  </section>
-
-
-  <!-- ═══════════════════ LAB A: DEPLOYMENT ═══════════════════ -->
-  <section class="lesson" id="lab-deploy" style="--lesson-color:#e879f9">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#000">LA</div>
-      <div><div class="lesson-title">Lab: Production-Ready Deployment</div></div>
-      <span class="lesson-tag">แบบฝึกหัด</span>
     </div>
+    <div class="warn">
+      <strong>Field Numbers — สำคัญมาก!</strong> Protobuf ใช้ field number ใน binary encoding ไม่ใช่ field name — ถ้าเปลี่ยน <code>id = 1</code> เป็น <code>id = 5</code> client เดิมจะอ่าน data ผิด แต่เปลี่ยนชื่อ field ได้ (backward compatible)
+    </div>
+  </div>
 
+  <div class="teach-block">
+    <h3>4 Communication Patterns</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Pattern</th><th>Request</th><th>Response</th><th>ตัวอย่าง use case</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--c8)">Unary</strong></td><td>1 message</td><td>1 message</td><td>GetStudent — เหมือน REST request ปกติ</td></tr>
+          <tr><td><strong style="color:var(--c8)">Server Streaming</strong></td><td>1 message</td><td>stream หลาย messages</td><td>Download large list, live price feed, log streaming</td></tr>
+          <tr><td><strong style="color:var(--c8)">Client Streaming</strong></td><td>stream หลาย messages</td><td>1 message</td><td>Upload batch data, aggregate sensor readings</td></tr>
+          <tr><td><strong style="color:var(--c8)">Bidirectional</strong></td><td>stream messages</td><td>stream messages</td><td>Real-time chat, collaborative editing, game server</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>gRPC vs REST — เปรียบเทียบโดยตรง</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th></th><th>gRPC</th><th>REST</th></tr></thead>
+        <tbody>
+          <tr><td>Protocol</td><td>HTTP/2 (บังคับ)</td><td>HTTP/1.1 หรือ 2</td></tr>
+          <tr><td>Data Format</td><td>Protobuf (binary)</td><td>JSON (text) — readable</td></tr>
+          <tr><td>Contract</td><td>Strict .proto (required)</td><td>Optional (OpenAPI)</td></tr>
+          <tr><td>Browser Support</td><td>จำกัด (ต้องใช้ grpc-web)</td><td>ดีมาก (native)</td></tr>
+          <tr><td>Performance</td><td>สูงกว่าอย่างชัดเจน</td><td>ปานกลาง</td></tr>
+          <tr><td>Streaming</td><td>Built-in (4 patterns)</td><td>ต้องใช้ WebSocket/SSE แยก</td></tr>
+          <tr><td>Code Generation</td><td>Auto-generate จาก .proto</td><td>Manual หรือใช้ tool</td></tr>
+          <tr><td>Learning Curve</td><td>สูงกว่า (ต้องเรียน Protobuf)</td><td>ต่ำ</td></tr>
+          <tr><td>ใช้เมื่อ</td><td>Internal microservices, need performance</td><td>Public API, browser clients</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exam">
+      <div class="et">📝 ข้อสอบมักถาม</div>
+      <ul>
+        <li>gRPC ใช้ HTTP/2 + Protobuf (ไม่ใช่ HTTP/1.1 + JSON)</li>
+        <li>Field number ใน .proto ห้ามเปลี่ยน — เปลี่ยนชื่อ field ได้</li>
+        <li>gRPC เหมาะกับ internal microservices ไม่เหมาะกับ public API (browser)</li>
+        <li>Protobuf binary ไม่ readable ต้องมี .proto decode ถึงอ่านได้</li>
+        <li>4 patterns: Unary, Server Streaming, Client Streaming, Bidirectional</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     LA — LAB: DEPLOYMENT
+══════════════════════════════════════════════ -->
+<section class="lesson" id="la" style="--lc:var(--la)">
+  <div class="lhead">
+    <div class="lnum" style="color:#000">LA</div>
+    <div><div class="ltitle">Lab: Production-Ready Deployment</div></div>
+    <span class="ltag">แบบฝึกหัด</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>ภาพรวมของ Lab</h3>
+    <p>สร้าง production-ready Go API พร้อม deploy บน Kubernetes โดยใช้ stack จริงที่ใช้ในอุตสาหกรรม:</p>
     <div class="cards">
-      <div class="card">
-        <div class="card-title">Stack ที่ใช้</div>
-        <ul>
-          <li><strong style="color:#e879f9">Go + Gin</strong> — REST API</li>
-          <li><strong style="color:#e879f9">PostgreSQL</strong> — Database</li>
-          <li><strong style="color:#e879f9">Docker</strong> — Containerize</li>
-          <li><strong style="color:#e879f9">Kubernetes (Minikube)</strong> — Orchestrate</li>
-          <li><strong style="color:#e879f9">GitHub Actions</strong> — CI/CD</li>
-          <li><strong style="color:#e879f9">Prometheus + Grafana</strong> — Monitoring</li>
-          <li><strong style="color:#e879f9">k6 + Hurl</strong> — Load &amp; functional testing</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="card-title">Project Structure</div>
-        <div class="code-wrap" style="margin-top:8px">
-          <pre><code class="language-plaintext">deployment/
-├── api/
-│   ├── main.go          # Go API source
-│   └── Dockerfile       # Multi-stage build
-├── docker/
-│   ├── init.sql         # PostgreSQL init
-│   └── prometheus.yml   # Scrape config
-├── k8s/
-│   ├── postgres-db.yaml
-│   ├── api-deployment.yaml
-│   ├── prometheus.yaml
-│   └── grafana.yaml
-├── tests/
-│   ├── hurl/            # Functional tests
-│   └── k6/script.js     # Load test
-└── docker-compose.yml   # Local dev stack</code></pre>
-        </div>
-      </div>
+      <div class="card"><h4>Go + Gin</h4><p>REST API framework เร็ว, ใช้น้อย memory, เหมาะกับ microservices</p></div>
+      <div class="card"><h4>PostgreSQL</h4><p>Relational database ที่ deploy บน K8s ด้วย StatefulSet</p></div>
+      <div class="card"><h4>Docker Multi-stage</h4><p>Build ใน Go image, run ใน scratch — image เล็กมาก ปลอดภัยกว่า</p></div>
+      <div class="card"><h4>Kubernetes</h4><p>Deployment + Service + HPA (autoscaling) + Health probes</p></div>
+      <div class="card"><h4>GitHub Actions CI/CD</h4><p>Push code → auto build → push Docker Hub → deploy K8s</p></div>
+      <div class="card"><h4>Prometheus + Grafana</h4><p>Collect metrics จาก Go API แสดง dashboard แบบ real-time</p></div>
     </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>api/main.go — อธิบายทุกส่วนสำคัญ</h3>
 
     <details open>
-      <summary>api/main.go — อธิบายทุกส่วน</summary>
-      <div class="details-body">
-        <div class="cards" style="margin-top:8px">
-          <div class="card">
-            <div class="card-title">1. Prometheus Metrics</div>
-            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">นับ request และวัด latency ทุก endpoint</p>
-            <div class="code-wrap">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-go">// Counter — นับจำนวน requests แยกตาม method/path/status
+      <summary>Prometheus Metrics — วัด performance ของ API</summary>
+      <div class="db">
+        <p>ทุก request จะถูกนับและวัด latency อัตโนมัติ ผ่าน middleware</p>
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-go">// Counter — นับจำนวน requests ทั้งหมด แยกตาม method/path/status
 var httpRequestsTotal = prometheus.NewCounterVec(
     prometheus.CounterOpts{
         Name: "http_requests_total",
+        Help: "Total number of HTTP requests",
     },
     []string{"method", "path", "status"},
 )
 
-// Histogram — วัด latency (distribution)
+// Histogram — กระจาย latency (เช่น p50, p95, p99)
 var httpRequestDuration = prometheus.NewHistogramVec(
     prometheus.HistogramOpts{
         Name:    "http_request_duration_seconds",
-        Buckets: prometheus.DefBuckets,
+        Buckets: prometheus.DefBuckets,   // [.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10]
     },
     []string{"method", "path"},
-)</code></pre>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">2. Prometheus Middleware</div>
-            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">รัน before/after ทุก handler — บันทึก metric อัตโนมัติ</p>
-            <div class="code-wrap">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-go">func prometheusMiddleware() gin.HandlerFunc {
+)
+
+// Middleware ที่บันทึก metrics ทุก request
+func prometheusMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
         start := time.Now()
-        c.Next()  // เรียก handler จริง
+        c.Next()    // เรียก handler จริง
         duration := time.Since(start).Seconds()
         status := fmt.Sprintf("%d", c.Writer.Status())
-
-        // บันทึก metrics
-        httpRequestsTotal.WithLabelValues(
-            c.Request.Method, c.FullPath(), status,
-        ).Inc()
-        httpRequestDuration.WithLabelValues(
-            c.Request.Method, c.FullPath(),
-        ).Observe(duration)
+        // บันทึก metrics หลัง handler ทำงานเสร็จ
+        httpRequestsTotal.WithLabelValues(c.Request.Method, c.FullPath(), status).Inc()
+        httpRequestDuration.WithLabelValues(c.Request.Method, c.FullPath()).Observe(duration)
     }
 }</code></pre>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">3. Health Probes</div>
-            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">Kubernetes ใช้ probe เหล่านี้ตัดสินใจ traffic</p>
-            <div class="code-wrap">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-go">// Liveness: container ยังมีชีวิตอยู่ไหม?
-// ถ้า fail → K8s restart container
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Health Probes — Kubernetes ใช้ตัดสินว่า container ดีไหม</summary>
+      <div class="db">
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-go">// Liveness Probe — "container ยังมีชีวิตอยู่ไหม?"
+// K8s เรียก /livez ทุก 10 วินาที ถ้าตอบ fail 3 ครั้ง → restart container
 func healthLive(c *gin.Context) {
     jsonResponse(c, http.StatusOK, gin.H{"status": "alive"})
 }
 
-// Readiness: พร้อมรับ traffic ไหม?
-// ถ้า fail → K8s หยุดส่ง traffic มาก่อน
+// Readiness Probe — "พร้อมรับ traffic ไหม?"
+// K8s เรียก /readyz ถ้าตอบ fail → หยุดส่ง traffic มา (ไม่ restart)
+// ใช้ตรวจ DB connection ก่อนบอกว่าพร้อม
 func healthReady(c *gin.Context) {
     if db != nil {
-        if err := db.Ping(); err != nil {
-            jsonResponse(c, http.StatusServiceUnavailable,
-                gin.H{"status": "not ready", "error": "database unreachable"})
+        if err := db.Ping(); err != nil {   // ลอง ping DB
+            // ถ้า DB ไม่ตอบ → บอก K8s ว่ายังไม่พร้อม
+            jsonResponse(c, http.StatusServiceUnavailable, gin.H{
+                "status": "not ready",
+                "error":  "database unreachable",
+            })
             return
         }
     }
     jsonResponse(c, http.StatusOK, gin.H{"status": "ready"})
 }</code></pre>
-            </div>
-            <div class="tbl-wrap" style="margin-top:10px">
-              <table>
-                <thead><tr><th>Endpoint</th><th>Purpose</th><th>Fail → K8s action</th></tr></thead>
-                <tbody>
-                  <tr><td><code>/livez</code></td><td>Liveness probe</td><td>Restart container</td></tr>
-                  <tr><td><code>/readyz</code></td><td>Readiness probe</td><td>Remove from load balancer</td></tr>
-                  <tr><td><code>/metrics</code></td><td>Prometheus scrape</td><td>—</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">4. Graceful Shutdown</div>
-            <p style="font-size:.82rem;color:var(--dim);margin-bottom:8px">รับ SIGTERM จาก K8s → drain connections ก่อน exit</p>
-            <div class="code-wrap">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-go">// Start server in background goroutine
+        </div>
+        <div class="tw" style="margin-top:10px">
+          <table>
+            <thead><tr><th>Probe</th><th>Endpoint</th><th>Fail → K8s ทำอะไร</th></tr></thead>
+            <tbody>
+              <tr><td>Liveness</td><td>/livez</td><td>Restart container</td></tr>
+              <tr><td>Readiness</td><td>/readyz</td><td>Remove from load balancer (ไม่ restart)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>Graceful Shutdown — ปิดอย่างสุภาพ</summary>
+      <div class="db">
+        <p>Kubernetes ส่ง SIGTERM ก่อน kill container — เราต้องรับ signal แล้วรอให้ in-flight requests เสร็จก่อน</p>
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-go">// Start server ใน goroutine (non-blocking)
 go func() {
-    if err := srv.ListenAndServe(); err != nil {
+    if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
         log.Fatalf("Server error: %v", err)
     }
 }()
 
-// Block รอ signal SIGTERM หรือ SIGINT
+// Block รอ signal จาก OS หรือ Kubernetes
 quit := make(chan os.Signal, 1)
 signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-&lt;-quit  // หยุดตรงนี้จนกว่าจะได้รับ signal
+&lt;-quit    // หยุดตรงนี้จนกว่าจะได้รับ signal
 
-// Graceful shutdown — รอ max 15 วินาที
+log.Println("Shutdown signal received – draining connections...")
+
+// Graceful shutdown: รอ max 15 วินาที
 ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 defer cancel()
-srv.Shutdown(ctx)  // รอ in-flight requests เสร็จก่อน</code></pre>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">5. Database Connection Pool</div>
-            <div class="code-wrap">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-go">db, err = sql.Open("postgres", dsn)
-
-// Connection pool settings
-db.SetMaxOpenConns(25)          // max connections พร้อมกัน
-db.SetMaxIdleConns(5)           // idle connections ที่เก็บไว้
-db.SetConnMaxLifetime(5 * time.Minute)  // recycle connections
-
-// Environment variables — ไม่ hardcode credentials
-host := getEnv("DB_HOST", "localhost")
-port := getEnv("DB_PORT", "5432")
-user := getEnv("DB_USER", "postgres")
-password := getEnv("DB_PASSWORD", "password")</code></pre>
-            </div>
-          </div>
+srv.Shutdown(ctx)    // รอ requests ที่กำลัง process อยู่ให้เสร็จก่อน</code></pre>
+        </div>
+        <div class="why">
+          <strong>ถ้าไม่มี Graceful Shutdown:</strong> K8s kill process ทันที — requests ที่กำลังทำงานอยู่จะขาดกลางคัน ทำให้ data inconsistent หรือ user ได้รับ error กะทันหัน
         </div>
       </div>
     </details>
+  </div>
 
-    <details>
-      <summary>Dockerfile — Multi-stage Build</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-dockerfile"># Stage 1: Build (ใช้ Go image ขนาดใหญ่)
-FROM golang:1.22-alpine AS builder
-WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download              # cache deps layer
-COPY . .
-RUN go build -o api .            # compile binary
-
-# Stage 2: Run (ใช้ scratch — ไม่มี OS ไม่มีอะไรเลย)
-FROM scratch
-COPY --from=builder /app/api /api
-EXPOSE 8080
-CMD ["/api"]
-
-# ผล: image ขนาดเล็กมาก (~10MB) vs single-stage (~300MB+)</code></pre>
-        </div>
-        <div class="card" style="margin-top:12px">
-          <div class="card-title">ทำไม Multi-stage?</div>
-          <ul>
-            <li>Stage 1: มี Go compiler, tools ทั้งหมด → ไม่ต้องใส่ใน final image</li>
-            <li>Stage 2: copy แค่ binary เดียว → image เล็ก, attack surface น้อย</li>
-            <li><code>scratch</code> = empty image ไม่มี shell, ไม่มี OS utilities</li>
-          </ul>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>4 Phases ของ Lab</summary>
-      <div class="details-body">
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Phase</th><th>ทำอะไร</th><th>เวลา</th></tr></thead>
-            <tbody>
-              <tr><td><strong style="color:#e879f9">1</strong></td><td>Setup environment — Minikube, fork repo, kubectl get nodes</td><td>15-20 นาที</td></tr>
-              <tr><td><strong style="color:#e879f9">2</strong></td><td>Deploy PostgreSQL → K8s DNS (connect โดย Service name ไม่ใช่ IP)</td><td>20 นาที</td></tr>
-              <tr><td><strong style="color:#e879f9">3</strong></td><td>Build Docker image → push Docker Hub → deploy Go API → test endpoints</td><td>30 นาที</td></tr>
-              <tr><td><strong style="color:#e879f9">4</strong></td><td>CI/CD — GitHub Actions + self-hosted runner → push code → auto deploy</td><td>40 นาที</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card" style="margin-top:12px">
-          <div class="card-title">Key Concept: Kubernetes DNS</div>
-          <p>App connect ถึง DB โดยใช้ <code>db-service</code> (Service name) แทน IP — K8s DNS resolve Service name → ClusterIP อัตโนมัติ IP ของ Pod เปลี่ยนได้ตลอด แต่ Service name คงที่เสมอ</p>
-        </div>
-        <div class="card">
-          <div class="card-title">CI/CD Flow (Phase 4)</div>
-          <div class="flow" style="flex-wrap:wrap;gap:6px">
-            <div class="flow-box" style="font-size:.78rem">git push</div>
-            <div class="flow-arr">→</div>
-            <div class="flow-box accent" style="font-size:.78rem">GitHub Actions trigger</div>
-            <div class="flow-arr">→</div>
-            <div class="flow-box" style="font-size:.78rem">docker build + push</div>
-            <div class="flow-arr">→</div>
-            <div class="flow-box" style="font-size:.78rem">kubectl rollout</div>
-            <div class="flow-arr">→</div>
-            <div class="flow-box accent" style="font-size:.78rem">New version live!</div>
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>Kubernetes YAML — api-deployment.yaml อธิบาย</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-yaml">apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: go-api
-spec:
-  replicas: 2                     # รัน 2 instances
-  selector:
-    matchLabels:
-      app: go-api
-  template:
-    spec:
-      containers:
-      - name: go-api
-        image: DOCKER_USERNAME/go-api:latest
-        ports:
-        - containerPort: 8080
-        env:                      # Environment variables สำหรับ DB
-        - name: DB_HOST
-          value: db-service       # ← ใช้ Service name (K8s DNS)
-        livenessProbe:            # K8s จะ ping endpoint นี้
-          httpGet:
-            path: /livez
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: 8080
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler   # Auto scale
-metadata:
-  name: go-api-hpa
-spec:
-  maxReplicas: 5                  # ขยายได้สูงสุด 5 pods
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        averageUtilization: 70    # scale up ถ้า CPU &gt; 70%</code></pre>
-        </div>
-      </div>
-    </details>
-  </section>
-
-  <!-- ═══════════════════ LAB B: gRPC STUDENT ═══════════════════ -->
-  <section class="lesson" id="lab-grpc" style="--lesson-color:#f472b6">
-    <div class="lesson-header">
-      <div class="lesson-num" style="color:#000">LB</div>
-      <div><div class="lesson-title">Lab: gRPC Student Service (Go)</div></div>
-      <span class="lesson-tag">แบบฝึกหัด</span>
+  <div class="teach-block">
+    <h3>4 Phases ของ Lab</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Phase</th><th>ทำอะไร</th><th>Concept หลัก</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--la)">1</strong> Environment Setup</td><td>Install Minikube, fork repo, kubectl get nodes</td><td>Kubernetes cluster local</td></tr>
+          <tr><td><strong style="color:var(--la)">2</strong> Database &amp; Networking</td><td>Deploy PostgreSQL บน K8s, connect ผ่าน Service name</td><td>K8s DNS — ต่อโดยชื่อ ไม่ใช่ IP</td></tr>
+          <tr><td><strong style="color:var(--la)">3</strong> Go API Deployment</td><td>Build Docker image → Push Docker Hub → Deploy K8s → Test</td><td>Multi-stage build, Health probes, HPA</td></tr>
+          <tr><td><strong style="color:var(--la)">4</strong> CI/CD Pipeline</td><td>GitHub Actions → push code → auto build/push/deploy</td><td>Self-hosted runner, Secrets management</td></tr>
+        </tbody>
+      </table>
     </div>
-
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">สิ่งที่จะสร้าง</div>
-        <p>gRPC service สำหรับ student data ใน Go — client เรียก <code>GetStudent(id)</code> → server คืน student info ผ่าน Protobuf binary protocol บน HTTP/2</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Final Structure</div>
-        <div class="code-wrap" style="margin-top:8px">
-          <pre><code class="language-plaintext">grpc-student/
-├── proto/
-│   └── student.proto        # สัญญา API
-├── studentpb/               # auto-generated จาก proto
-│   ├── student.pb.go
-│   └── student_grpc.pb.go
-├── server/
-│   └── server.go            # implement service
-├── client/
-│   └── client.go            # เรียก service
-├── go.mod
-└── go.sum</code></pre>
-        </div>
-      </div>
+    <div class="tip">
+      <strong>Key Concept Phase 2 — Kubernetes DNS:</strong> App เชื่อมต่อ DB ด้วย <code>db-service</code> (Service name) ไม่ใช่ IP address — K8s DNS resolve ชื่อ → ClusterIP อัตโนมัติ IP ของ Pod เปลี่ยนได้ตลอด แต่ Service name คงที่
     </div>
+  </div>
+</section>
 
-    <details open>
-      <summary>Step 1-2 — ติดตั้งและ init project</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-bash"># ติดตั้ง protoc plugins
+<!-- ══════════════════════════════════════════════
+     LB — LAB: gRPC STUDENT
+══════════════════════════════════════════════ -->
+<section class="lesson" id="lb" style="--lc:var(--lb)">
+  <div class="lhead">
+    <div class="lnum" style="color:#000">LB</div>
+    <div><div class="ltitle">Lab: gRPC Student Service (Go)</div></div>
+    <span class="ltag">แบบฝึกหัด</span>
+  </div>
+
+  <div class="teach-block">
+    <h3>สร้าง gRPC Service ตั้งแต่เริ่มต้น</h3>
+    <p>เราจะสร้าง student service ที่ client สามารถเรียก <code>GetStudent(id)</code> แล้วได้ข้อมูลนักศึกษากลับมา ผ่าน gRPC</p>
+    <div class="flow" style="flex-wrap:wrap">
+      <div class="fb a">เขียน .proto</div><div class="fa">→</div>
+      <div class="fb">Generate code</div><div class="fa">→</div>
+      <div class="fb a">Implement server</div><div class="fa">→</div>
+      <div class="fb">Write client</div><div class="fa">→</div>
+      <div class="fb a">Test</div>
+    </div>
+  </div>
+
+  <div class="teach-block">
+    <h3>Step 1–2: ติดตั้งและสร้าง Project</h3>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-bash"># ติดตั้ง protoc plugins
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
-# ตรวจสอบ
-go version
-protoc --version
+# เช็คว่ามีครบ
+go version       # ต้องการ Go 1.18+
+protoc --version # ต้องการ protoc
 
 # สร้าง project
 mkdir grpc-student &amp;&amp; cd grpc-student
 go mod init grpc-student
 mkdir proto server client</code></pre>
-        </div>
-      </div>
-    </details>
+    </div>
+  </div>
 
-    <details open>
-      <summary>Step 3 — proto/student.proto อธิบายทุกบรรทัด</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-protobuf">syntax = "proto3";              // ใช้ proto version 3
+  <div class="teach-block">
+    <h3>Step 3: proto/student.proto — นิยาม API</h3>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-protobuf">syntax = "proto3";
+package student;
+option go_package = "./studentpb";
 
-package student;               // namespace ป้องกัน name collision
-
-option go_package = "./studentpb";  // บอก protoc ว่าจะ generate code ไว้ที่ไหน
-
-// Service = กำหนด RPC methods ที่ server ต้อง implement
 service StudentService {
   rpc GetStudent (StudentRequest) returns (StudentResponse);
-
-  // assignments เพิ่มเติม:
-  rpc ListStudents (Empty) returns (StudentListResponse);
-  rpc CreateStudent (StudentListResponse) returns (Empty);
-  rpc DeleteStudent (DeleteStudentRequest) returns (Empty);
+  rpc ListStudents (Empty) returns (StudentListResponse);    // Task 1
 }
 
-// Messages = structure ของ data (เหมือน struct)
-message Empty {}               // ไม่มี payload (เช่น void)
+message Empty {}
 
 message StudentRequest {
-  int32 id = 1;                // field number 1 (ใช้ใน binary encoding)
-  optional string name = 2;   // optional field
+  int32 id = 1;
 }
 
 message StudentResponse {
@@ -1754,77 +1665,51 @@ message StudentResponse {
   string name = 2;
   string major = 3;
   string email = 4;
-  // ถ้าเพิ่ม field ใหม่ → ต้องใช้ field number ใหม่ (5, 6, ...)
-  // ห้ามเปลี่ยน field number เดิม = breaking change!
+  // string phone = 5;   ← Task 2: เพิ่ม field ใหม่ field number ต้องต่อจากเดิม
 }
 
 message StudentListResponse {
-  repeated StudentResponse student = 1;  // repeated = array
-}
-
-message DeleteStudentRequest {
-  string name = 1;
+  repeated StudentResponse student = 1;  // repeated = array/slice
 }</code></pre>
-        </div>
-      </div>
-    </details>
+    </div>
+  </div>
 
-    <details>
-      <summary>Step 4 — Generate Go code จาก proto</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-bash">protoc --go_out=. --go-grpc_out=. proto/student.proto</code></pre>
-        </div>
-        <div class="tbl-wrap" style="margin-top:12px">
-          <table>
-            <thead><tr><th>Flag</th><th>ทำอะไร</th><th>ไฟล์ที่ได้</th></tr></thead>
-            <tbody>
-              <tr><td><code>--go_out=.</code></td><td>Generate message structs</td><td>studentpb/student.pb.go</td></tr>
-              <tr><td><code>--go-grpc_out=.</code></td><td>Generate gRPC interfaces</td><td>studentpb/student_grpc.pb.go</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="tbl-wrap" style="margin-top:8px">
-          <table>
-            <thead><tr><th>File</th><th>ประกอบด้วย</th></tr></thead>
-            <tbody>
-              <tr><td>student.pb.go</td><td>Go structs สำหรับ StudentRequest, StudentResponse (จาก messages)</td></tr>
-              <tr><td>student_grpc.pb.go</td><td>Client stub + Server interface ที่ต้อง implement</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
+  <div class="teach-block">
+    <h3>Step 4: Generate Go code</h3>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-bash">protoc --go_out=. --go-grpc_out=. proto/student.proto
+# สร้างไฟล์:
+# studentpb/student.pb.go      → structs สำหรับ messages
+# studentpb/student_grpc.pb.go → client stub + server interface</code></pre>
+    </div>
+  </div>
 
-    <details>
-      <summary>Step 5 — server/server.go อธิบายทุกส่วน</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-go">package main
+  <div class="teach-block">
+    <h3>Step 5: server/server.go — อธิบายทุกบรรทัด</h3>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-go">package main
 
 import (
     "context"
     "log"
     "net"
-
     pb "grpc-student/studentpb"   // import generated code
     "google.golang.org/grpc"
 )
 
-// server struct — ต้อง embed UnimplementedStudentServiceServer
-// เพื่อ forward-compatibility (ถ้า proto เพิ่ม method ใหม่ ไม่ compile error)
+// server struct ต้อง embed UnimplementedStudentServiceServer
+// ถ้า .proto เพิ่ม method ใหม่ แต่เรายังไม่ implement → ไม่ compile error
 type server struct {
     pb.UnimplementedStudentServiceServer
 }
 
-// Implement GetStudent RPC method
-// signature ต้องตรงกับที่ proto กำหนด
+// Implement GetStudent — signature ต้องตรงกับ .proto
 func (s *server) GetStudent(ctx context.Context, req *pb.StudentRequest) (*pb.StudentResponse, error) {
-    log.Printf("Received request for student ID: %d", req.Id)
+    log.Printf("Received: GetStudent id=%d", req.Id)
 
-    // ตรงนี้ปกติจะ query DB แต่ lab ใช้ mock data
+    // ในโลกจริงจะ query database แต่ lab ใช้ mock
     return &amp;pb.StudentResponse{
         Id:    req.Id,
         Name:  "Alice Johnson",
@@ -1834,248 +1719,144 @@ func (s *server) GetStudent(ctx context.Context, req *pb.StudentRequest) (*pb.St
 }
 
 func main() {
-    // เปิด TCP listener บน port 50051
+    // เปิด TCP port 50051 (gRPC convention)
     lis, err := net.Listen("tcp", ":50051")
     if err != nil {
         log.Fatalf("Failed to listen: %v", err)
     }
-
-    // สร้าง gRPC server
     grpcServer := grpc.NewServer()
-
-    // Register service implementation
-    pb.RegisterStudentServiceServer(grpcServer, &amp;server{})
-
-    log.Println("gRPC Server running on port 50051")
-    // เริ่ม serve (blocking)
-    grpcServer.Serve(lis)
+    pb.RegisterStudentServiceServer(grpcServer, &amp;server{})  // register implementation
+    log.Println("gRPC Server :50051")
+    grpcServer.Serve(lis)  // blocking
 }</code></pre>
-        </div>
-        <div class="code-wrap" style="margin-top:12px">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-bash"># Run server (Terminal 1)
-go mod tidy    # update go.sum
+    </div>
+    <div class="cw" style="margin-top:8px">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-bash">go mod tidy          # update go.sum
 go run server/server.go
-# Output: gRPC Server running on port 50051</code></pre>
-        </div>
-      </div>
-    </details>
+# Output: gRPC Server :50051</code></pre>
+    </div>
+  </div>
 
-    <details>
-      <summary>Step 6 — client/client.go อธิบายทุกส่วน</summary>
-      <div class="details-body">
-        <div class="code-wrap">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-go">package main
+  <div class="teach-block">
+    <h3>Step 6: client/client.go — เรียก server</h3>
+    <div class="cw">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-go">package main
 
 import (
     "context"
     "log"
     "time"
-
     pb "grpc-student/studentpb"
     "google.golang.org/grpc"
 )
 
 func main() {
     // เชื่อมต่อ gRPC server
-    // grpc.WithInsecure() = ไม่ใช้ TLS (สำหรับ dev/lab เท่านั้น)
+    // grpc.WithInsecure() = ไม่ใช้ TLS (dev/lab เท่านั้น — production ต้องใช้ TLS)
     conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
     if err != nil {
         log.Fatalf("Could not connect: %v", err)
     }
     defer conn.Close()
 
-    // สร้าง client stub (generated โดย protoc)
-    // stub คือ wrapper ที่ทำให้เรียก remote method เหมือน local function
+    // สร้าง client stub — auto-generated โดย protoc
+    // stub ทำให้เรียก remote method เหมือน local function
     client := pb.NewStudentServiceClient(conn)
 
-    // Context with timeout — ถ้า server ตอบไม่ทัน 1 วินาที → error
+    // Context with timeout — ถ้า server ไม่ตอบใน 1 วินาที → cancel
     ctx, cancel := context.WithTimeout(context.Background(), time.Second)
     defer cancel()
 
     // เรียก RPC — เหมือนเรียก local function ธรรมดา
-    res, err := client.GetStudent(ctx, &amp;pb.StudentRequest{
-        Id: 101,
-    })
+    res, err := client.GetStudent(ctx, &amp;pb.StudentRequest{Id: 101})
     if err != nil {
-        log.Fatalf("Error calling GetStudent: %v", err)
+        log.Fatalf("Error: %v", err)
     }
-
-    log.Printf("Student Info:")
-    log.Printf("ID: %d", res.Id)
-    log.Printf("Name: %s", res.Name)
-    log.Printf("Major: %s", res.Major)
-    log.Printf("Email: %s", res.Email)
+    log.Printf("ID: %d, Name: %s, Major: %s", res.Id, res.Name, res.Major)
 }</code></pre>
-        </div>
-        <div class="code-wrap" style="margin-top:12px">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          <pre><code class="language-bash"># Run client (Terminal 2 — server ต้องรันก่อน)
+    </div>
+    <div class="cw" style="margin-top:8px">
+      <button class="cp" onclick="cp(this)">Copy</button>
+      <pre><code class="language-bash"># Terminal 2 (server ต้องรันอยู่)
 go run client/client.go
+# Output: ID: 101, Name: Alice Johnson, Major: Computer Science</code></pre>
+    </div>
+  </div>
 
-# Expected output:
-# Student Info:
-# ID: 101
-# Name: Alice Johnson
-# Major: Computer Science
-# Email: alice@university.com</code></pre>
+  <div class="teach-block">
+    <h3>Assignments</h3>
+    <details open>
+      <summary>Task 1: เพิ่ม ListStudents RPC</summary>
+      <div class="db">
+        <div class="steps">
+          <div class="step"><p>เพิ่มใน <code>student.proto</code>: <code>rpc ListStudents (Empty) returns (StudentListResponse);</code> และ messages <code>Empty</code>, <code>StudentListResponse</code></p></div>
+          <div class="step"><p>Re-generate: <code>protoc --go_out=. --go-grpc_out=. proto/student.proto</code></p></div>
+          <div class="step"><p>Implement <code>ListStudents()</code> ใน server.go — return mock list ของนักศึกษา</p></div>
+          <div class="step"><p>เรียก <code>client.ListStudents()</code> ใน client.go แล้ว print ผลลัพธ์</p></div>
         </div>
       </div>
     </details>
-
     <details>
-      <summary>gRPC Flow ภาพรวม</summary>
-      <div class="details-body">
-        <div class="flow" style="flex-wrap:wrap;gap:8px;margin-bottom:14px">
-          <div class="flow-box accent" style="font-size:.8rem">client.GetStudent()</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box" style="font-size:.8rem">Client Stub</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box" style="font-size:.8rem">Protobuf serialize</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box" style="font-size:.8rem">HTTP/2</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box" style="font-size:.8rem">Server Stub</div>
-          <div class="flow-arr">→</div>
-          <div class="flow-box accent" style="font-size:.8rem">GetStudent() method</div>
-        </div>
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Step</th><th>ทำอะไร</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>เขียน <code>.proto</code> file (สัญญา API)</td></tr>
-              <tr><td>2</td><td>Run <code>protoc</code> → generate Go code</td></tr>
-              <tr><td>3</td><td>Implement server methods</td></tr>
-              <tr><td>4</td><td>Start server (<code>grpcServer.Serve()</code>)</td></tr>
-              <tr><td>5</td><td>Client connect → สร้าง stub</td></tr>
-              <tr><td>6</td><td>Client call <code>stub.GetStudent()</code></td></tr>
-              <tr><td>7</td><td>Stub serialize → HTTP/2 → Server deserialize → method → response</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </details>
-
-    <details>
-      <summary>Assignments — Task 1 &amp; 2</summary>
-      <div class="details-body">
-        <div class="cards" style="margin-top:8px">
-          <div class="card">
-            <div class="card-title">Task 1: Add ListStudents RPC</div>
-            <div class="code-wrap" style="margin-top:8px">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-protobuf">// เพิ่มใน service StudentService
-rpc ListStudents (Empty) returns (StudentListResponse);
-
-// เพิ่ม messages
-message Empty {}
-
-message StudentListResponse {
-  repeated StudentResponse student = 1;
-}</code></pre>
-            </div>
-            <ul style="margin-top:8px;font-size:.82rem;color:var(--dim)">
-              <li>Update proto → regenerate code (<code>protoc ...</code>)</li>
-              <li>Implement <code>ListStudents()</code> ใน server.go คืน list ของ students</li>
-              <li>Update client.go เรียก <code>ListStudents()</code></li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="card-title">Task 2: Add Phone Field</div>
-            <div class="code-wrap" style="margin-top:8px">
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              <pre><code class="language-protobuf">message StudentResponse {
+      <summary>Task 2: เพิ่ม phone field</summary>
+      <div class="db">
+        <div class="cw">
+          <button class="cp" onclick="cp(this)">Copy</button>
+          <pre><code class="language-protobuf">message StudentResponse {
   int32 id = 1;
   string name = 2;
   string major = 3;
   string email = 4;
-  string phone = 5;   // ← เพิ่ม field ใหม่ (field number ต่อจากเดิม!)
+  string phone = 5;   // ← เพิ่มตรงนี้ ใช้ field number 5 (ต่อจากเดิม)
 }</code></pre>
-            </div>
-            <ul style="margin-top:8px;font-size:.82rem;color:var(--dim)">
-              <li>Regenerate code</li>
-              <li>Update server: ใส่ Phone ใน response</li>
-              <li>Update client: print phone ด้วย</li>
-              <li>ห้ามเปลี่ยน field number 1-4 = breaking change</li>
-            </ul>
-          </div>
         </div>
-        <div class="card" style="margin-top:4px">
-          <div class="card-title">Submission</div>
-          <ul>
-            <li>Push ขึ้น GitHub: repo name = <code>grpc-student-รหัสนักศึกษา</code></li>
-            <li>ส่ง GitHub link ที่ <code>https://courses.cs.tu.ac.th</code></li>
-            <li>Deadline: Monday 30, 23:59</li>
-          </ul>
+        <div class="steps">
+          <div class="step"><p>เพิ่ม <code>phone = 5</code> ใน <code>StudentResponse</code> — field number ต้องเป็น 5 (ต่อจาก 4)</p></div>
+          <div class="step"><p>Re-generate code ด้วย protoc</p></div>
+          <div class="step"><p>Update server.go: ใส่ <code>Phone: "081-234-5678"</code> ใน response</p></div>
+          <div class="step"><p>Update client.go: print <code>res.Phone</code></p></div>
+        </div>
+        <div class="warn">
+          <strong>ห้ามเปลี่ยน field numbers 1-4</strong> ถึงแม้จะ re-generate แล้ว — client เดิมที่ยังไม่ update จะอ่าน data ผิด
         </div>
       </div>
     </details>
-  </section>
-
+    <div class="card" style="margin-top:12px">
+      <h4>Submission</h4>
+      <ul>
+        <li>Push ขึ้น GitHub repo ชื่อ <code>grpc-student-รหัสนักศึกษา</code></li>
+        <li>ส่ง GitHub link ที่ <a href="https://courses.cs.tu.ac.th" style="color:var(--lb)">courses.cs.tu.ac.th</a></li>
+        <li>Deadline: Monday 30, 23:59</li>
+      </ul>
+    </div>
+  </div>
+</section>
 </main>
-
 <script>
-// Init highlight.js
-document.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('pre code').forEach(el=>{
-    hljs.highlightElement(el);
-  });
-});
-
-// Progress bar
-window.addEventListener('scroll',()=>{
-  const d=document.documentElement;
-  const pct=(d.scrollTop/(d.scrollHeight-d.clientHeight))*100;
-  document.getElementById('progress').style.width=pct+'%';
-});
-
-// Copy buttons
-function copyCode(btn){
-  const code=btn.nextElementSibling.querySelector('code');
-  navigator.clipboard.writeText(code.innerText).then(()=>{
-    btn.textContent='Copied!';
-    btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000);
-  });
-}
-
-// Active nav via IntersectionObserver
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el));});
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('progress').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+function cp(btn){const code=btn.nextElementSibling.querySelector('code');navigator.clipboard.writeText(code.innerText).then(()=>{btn.textContent='✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000);});}
 const sections=document.querySelectorAll('section.lesson');
-const navItems=document.querySelectorAll('.nav-item');
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      navItems.forEach(n=>n.classList.remove('active'));
-      const id=e.target.id;
-      const match=document.querySelector(`.nav-item[href="#${id}"]`);
-      if(match){match.classList.add('active');match.scrollIntoView({block:'nearest',behavior:'smooth'});}
-    }
-  });
-},{threshold:0.25,rootMargin:'-80px 0px -60% 0px'});
+const nis=document.querySelectorAll('.ni');
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){nis.forEach(n=>n.classList.remove('active'));const m=document.querySelector(`.ni[href="#${e.target.id}"]`);if(m){m.classList.add('active');m.scrollIntoView({block:'nearest',behavior:'smooth'});}}});},{threshold:0.2,rootMargin:'-80px 0px -55% 0px'});
 sections.forEach(s=>obs.observe(s));
-
-// Search filter
-function filterLessons(q){
-  const term=q.toLowerCase().trim();
-  sections.forEach(s=>{
-    if(!term){s.classList.remove('hidden');return;}
-    const text=s.innerText.toLowerCase();
-    s.classList.toggle('hidden',!text.includes(term));
-  });
-}
-
-// Mobile sidebar
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('show');
-}
-
-// Nav click on mobile closes sidebar
-navItems.forEach(n=>n.addEventListener('click',()=>{
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-}));
+function filterL(q){const t=q.toLowerCase().trim();sections.forEach(s=>{if(!t){s.classList.remove('hidden');return;}s.classList.toggle('hidden',!s.innerText.toLowerCase().includes(t));});}
+function toggleSB(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('ov').classList.toggle('show');}
+nis.forEach(n=>n.addEventListener('click',()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('ov').classList.remove('show');}));
+</script>
+</body>
+</html>
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el));});
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('progress').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+function cp(btn){const code=btn.nextElementSibling.querySelector('code');navigator.clipboard.writeText(code.innerText).then(()=>{btn.textContent='✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000);});}
+const sections=document.querySelectorAll('section.lesson');
+const nis=document.querySelectorAll('.ni');
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){nis.forEach(n=>n.classList.remove('active'));const m=document.querySelector(`.ni[href="#${e.target.id}"]`);if(m){m.classList.add('active');m.scrollIntoView({block:'nearest',behavior:'smooth'});}}});},{threshold:0.2,rootMargin:'-80px 0px -55% 0px'});
+sections.forEach(s=>obs.observe(s));
+function filterL(q){const t=q.toLowerCase().trim();sections.forEach(s=>{if(!t){s.classList.remove('hidden');return;}s.classList.toggle('hidden',!s.innerText.toLowerCase().includes(t));});}
+function toggleSB(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('ov').classList.toggle('show');}
+nis.forEach(n=>n.addEventListener('click',()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('ov').classList.remove('show');}));
 </script>
 </body>
 </html>
