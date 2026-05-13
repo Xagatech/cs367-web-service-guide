@@ -1847,16 +1847,3 @@ nis.forEach(n=>n.addEventListener('click',()=>{document.getElementById('sidebar'
 </script>
 </body>
 </html>
-document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el));});
-window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('progress').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
-function cp(btn){const code=btn.nextElementSibling.querySelector('code');navigator.clipboard.writeText(code.innerText).then(()=>{btn.textContent='✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},2000);});}
-const sections=document.querySelectorAll('section.lesson');
-const nis=document.querySelectorAll('.ni');
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){nis.forEach(n=>n.classList.remove('active'));const m=document.querySelector(`.ni[href="#${e.target.id}"]`);if(m){m.classList.add('active');m.scrollIntoView({block:'nearest',behavior:'smooth'});}}});},{threshold:0.2,rootMargin:'-80px 0px -55% 0px'});
-sections.forEach(s=>obs.observe(s));
-function filterL(q){const t=q.toLowerCase().trim();sections.forEach(s=>{if(!t){s.classList.remove('hidden');return;}s.classList.toggle('hidden',!s.innerText.toLowerCase().includes(t));});}
-function toggleSB(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('ov').classList.toggle('show');}
-nis.forEach(n=>n.addEventListener('click',()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('ov').classList.remove('show');}));
-</script>
-</body>
-</html>
